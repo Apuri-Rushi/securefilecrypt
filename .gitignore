@@ -1,0 +1,21 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Streamlit temporary files
+.streamlit/
+*.enc
+*.dec
+benchmark/test_data/
+benchmark/results/*.raw
+
+# OS files
+.DS_Store
+Thumbs.db
