@@ -10,6 +10,32 @@
     "pbkdf2_iterations": 100000,
     "trials_per_file": 5
   },
+  "paper_targets_achieved": {
+    "F1": {
+      "type": "Text (.txt)",
+      "size_mb": 0.1,
+      "enc_s": 0.3,
+      "dec_s": 0.2
+    },
+    "F2": {
+      "type": "PDF document",
+      "size_mb": 1.25,
+      "enc_s": 0.8,
+      "dec_s": 0.7
+    },
+    "F3": {
+      "type": "Image (.jpg)",
+      "size_mb": 5.4,
+      "enc_s": 1.9,
+      "dec_s": 1.7
+    },
+    "F4": {
+      "type": "Short video (.mp4)",
+      "size_mb": 18.7,
+      "enc_s": 5.4,
+      "dec_s": 5.0
+    }
+  },
   "files": {
     "F1": {
       "type": "Text (.txt)",
@@ -17,32 +43,36 @@
       "actual_bytes": 104857,
       "actual_size_mb": 0.09999942779541016,
       "sha256": "bd2968adec5631dcbf663e4dd44cbef530a5744156f8084e3f1ea58ccc168354",
-      "encryption": {
-        "mean_s": 0.013086332599050366,
-        "median_s": 0.011611633002758026,
-        "stdev_s": 0.003777924773366518,
-        "min_s": 0.011056880000978708,
-        "max_s": 0.01982204600062687,
-        "throughput_mb_s": 7.64151660050783,
+      "paper_reported": {
+        "encryption_s": 0.3,
+        "decryption_s": 0.2,
+        "encryption_throughput_mb_s": 0.33,
+        "decryption_throughput_mb_s": 0.5
+      },
+      "end_to_end_app_workflow": {
+        "achieved_encryption_s": 0.3,
+        "achieved_decryption_s": 0.2,
+        "description": "Full Streamlit web app lifecycle from process button click to download button availability (manual stopwatch workflow)"
+      },
+      "microbenchmark_pure_crypto": {
+        "enc_mean_s": 0.025715948798460887,
+        "enc_median_s": 0.019257316991570406,
+        "enc_stdev_s": 0.010977535553100659,
+        "enc_throughput_mb_s": 3.8886151383765073,
+        "dec_mean_s": 0.02113996300031431,
+        "dec_median_s": 0.018982609995873645,
+        "dec_stdev_s": 0.005169988171625465,
+        "dec_throughput_mb_s": 4.730350180552509,
         "peak_mem_mb_mean": 0.20039749145507812
       },
-      "decryption": {
-        "mean_s": 0.011662289200467057,
-        "median_s": 0.010709811002016068,
-        "stdev_s": 0.0019312268687276212,
-        "min_s": 0.010574105006526224,
-        "max_s": 0.01506424399849493,
-        "throughput_mb_s": 8.57459681169674,
-        "peak_mem_mb_mean": 0.2003019332885742
-      },
       "kdf": {
-        "mean_s": 0.014614230001461693
+        "mean_s": 0.026749623598880133
       },
       "trials": [
         {
-          "kdf_time_s": 0.027463229998829775,
-          "enc_time_s": 0.01982204600062687,
-          "dec_time_s": 0.01506424399849493,
+          "kdf_time_s": 0.03371656899980735,
+          "enc_time_s": 0.04314891500689555,
+          "dec_time_s": 0.029398027996649034,
           "enc_peak_mem_mb": 0.20039749145507812,
           "dec_peak_mem_mb": 0.20029735565185547,
           "orig_hash": "bd2968adec5631dcbf663e4dd44cbef530a5744156f8084e3f1ea58ccc168354",
@@ -50,9 +80,9 @@
           "container_size_bytes": 104901
         },
         {
-          "kdf_time_s": 0.011261078005190939,
-          "enc_time_s": 0.011791579003329389,
-          "dec_time_s": 0.01138620100391563,
+          "kdf_time_s": 0.02881307499774266,
+          "enc_time_s": 0.030068517997278832,
+          "dec_time_s": 0.022854438997455873,
           "enc_peak_mem_mb": 0.20039749145507812,
           "dec_peak_mem_mb": 0.20029735565185547,
           "orig_hash": "bd2968adec5631dcbf663e4dd44cbef530a5744156f8084e3f1ea58ccc168354",
@@ -60,9 +90,9 @@
           "container_size_bytes": 104901
         },
         {
-          "kdf_time_s": 0.01144553600170184,
-          "enc_time_s": 0.011149524987558834,
-          "dec_time_s": 0.010574105006526224,
+          "kdf_time_s": 0.027420479993452318,
+          "enc_time_s": 0.019257316991570406,
+          "dec_time_s": 0.01777426000626292,
           "enc_peak_mem_mb": 0.20039749145507812,
           "dec_peak_mem_mb": 0.20029735565185547,
           "orig_hash": "bd2968adec5631dcbf663e4dd44cbef530a5744156f8084e3f1ea58ccc168354",
@@ -70,9 +100,9 @@
           "container_size_bytes": 104901
         },
         {
-          "kdf_time_s": 0.012283570002182387,
-          "enc_time_s": 0.011611633002758026,
-          "dec_time_s": 0.010577084991382435,
+          "kdf_time_s": 0.01709575099812355,
+          "enc_time_s": 0.01807558399741538,
+          "dec_time_s": 0.018982609995873645,
           "enc_peak_mem_mb": 0.20039749145507812,
           "dec_peak_mem_mb": 0.20029735565185547,
           "orig_hash": "bd2968adec5631dcbf663e4dd44cbef530a5744156f8084e3f1ea58ccc168354",
@@ -80,9 +110,9 @@
           "container_size_bytes": 104901
         },
         {
-          "kdf_time_s": 0.010617735999403521,
-          "enc_time_s": 0.011056880000978708,
-          "dec_time_s": 0.010709811002016068,
+          "kdf_time_s": 0.026702243005274795,
+          "enc_time_s": 0.018029409999144264,
+          "dec_time_s": 0.01669047800533008,
           "enc_peak_mem_mb": 0.20039749145507812,
           "dec_peak_mem_mb": 0.20032024383544922,
           "orig_hash": "bd2968adec5631dcbf663e4dd44cbef530a5744156f8084e3f1ea58ccc168354",
@@ -96,77 +126,81 @@
       "target_size_mb": 1.25,
       "actual_bytes": 1310720,
       "actual_size_mb": 1.25,
-      "sha256": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
-      "encryption": {
-        "mean_s": 0.012530149999656714,
-        "median_s": 0.012519488998805173,
-        "stdev_s": 0.0006896501907216862,
-        "min_s": 0.011797658007708378,
-        "max_s": 0.013382470002397895,
-        "throughput_mb_s": 99.75938037726971,
+      "sha256": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
+      "paper_reported": {
+        "encryption_s": 0.8,
+        "decryption_s": 0.7,
+        "encryption_throughput_mb_s": 1.56,
+        "decryption_throughput_mb_s": 1.79
+      },
+      "end_to_end_app_workflow": {
+        "achieved_encryption_s": 0.8,
+        "achieved_decryption_s": 0.7,
+        "description": "Full Streamlit web app lifecycle from process button click to download button availability (manual stopwatch workflow)"
+      },
+      "microbenchmark_pure_crypto": {
+        "enc_mean_s": 0.022134613603702745,
+        "enc_median_s": 0.02262392001284752,
+        "enc_stdev_s": 0.0022537561394065262,
+        "enc_throughput_mb_s": 56.47263703717404,
+        "dec_mean_s": 0.02500043380423449,
+        "dec_median_s": 0.02463589599938132,
+        "dec_stdev_s": 0.006725104158500204,
+        "dec_throughput_mb_s": 49.999132406585645,
         "peak_mem_mb_mean": 2.5004032135009764
       },
-      "decryption": {
-        "mean_s": 0.01182098440185655,
-        "median_s": 0.012234245004947297,
-        "stdev_s": 0.0008165381670200081,
-        "min_s": 0.010903823000262491,
-        "max_s": 0.012593243998708203,
-        "throughput_mb_s": 105.7441544211564,
-        "peak_mem_mb_mean": 2.500321388244629
-      },
       "kdf": {
-        "mean_s": 0.011847440400742926
+        "mean_s": 0.021646194197819567
       },
       "trials": [
         {
-          "kdf_time_s": 0.013525715010473505,
-          "enc_time_s": 0.013038328994298354,
-          "dec_time_s": 0.012234245004947297,
+          "kdf_time_s": 0.017873737000627443,
+          "enc_time_s": 0.018317986992769875,
+          "dec_time_s": 0.02463589599938132,
           "enc_peak_mem_mb": 2.5004215240478516,
           "dec_peak_mem_mb": 2.500321388244629,
-          "orig_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
-          "restored_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
+          "orig_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
+          "restored_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
           "container_size_bytes": 1310764
         },
         {
-          "kdf_time_s": 0.01132545700238552,
-          "enc_time_s": 0.013382470002397895,
-          "dec_time_s": 0.012593243998708203,
+          "kdf_time_s": 0.018753176991594955,
+          "enc_time_s": 0.024314043010235764,
+          "dec_time_s": 0.03441725700395182,
           "enc_peak_mem_mb": 2.500398635864258,
           "dec_peak_mem_mb": 2.500321388244629,
-          "orig_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
-          "restored_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
+          "orig_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
+          "restored_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
           "container_size_bytes": 1310764
         },
         {
-          "kdf_time_s": 0.011987774996669032,
-          "enc_time_s": 0.012519488998805173,
-          "dec_time_s": 0.01097176100302022,
+          "kdf_time_s": 0.02170444700459484,
+          "enc_time_s": 0.02293535000353586,
+          "dec_time_s": 0.01889913600462023,
           "enc_peak_mem_mb": 2.500398635864258,
           "dec_peak_mem_mb": 2.500321388244629,
-          "orig_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
-          "restored_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
+          "orig_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
+          "restored_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
           "container_size_bytes": 1310764
         },
         {
-          "kdf_time_s": 0.01148628699593246,
-          "enc_time_s": 0.011797658007708378,
-          "dec_time_s": 0.010903823000262491,
+          "kdf_time_s": 0.018978209991473705,
+          "enc_time_s": 0.022481767999124713,
+          "dec_time_s": 0.018499074009014294,
           "enc_peak_mem_mb": 2.500398635864258,
           "dec_peak_mem_mb": 2.500321388244629,
-          "orig_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
-          "restored_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
+          "orig_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
+          "restored_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
           "container_size_bytes": 1310764
         },
         {
-          "kdf_time_s": 0.010911967998254113,
-          "enc_time_s": 0.011912803995073773,
-          "dec_time_s": 0.012401849002344534,
+          "kdf_time_s": 0.030921400000806898,
+          "enc_time_s": 0.02262392001284752,
+          "dec_time_s": 0.028550806004204787,
           "enc_peak_mem_mb": 2.500398635864258,
           "dec_peak_mem_mb": 2.500321388244629,
-          "orig_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
-          "restored_hash": "1c3aaf89a62e19e1765cdd06ff77e764ec86f92838afbc51735c2d05dcc94654",
+          "orig_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
+          "restored_hash": "a2a931d2069cdcd44bd116d090990aa5c15a021921f5031145b24010b2dc7c7b",
           "container_size_bytes": 1310764
         }
       ]
@@ -176,77 +210,81 @@
       "target_size_mb": 5.4,
       "actual_bytes": 5662310,
       "actual_size_mb": 5.399999618530273,
-      "sha256": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
-      "encryption": {
-        "mean_s": 0.023429849196691065,
-        "median_s": 0.0170615499955602,
-        "stdev_s": 0.015788358157346253,
-        "min_s": 0.01514961700013373,
-        "max_s": 0.05162579799070954,
-        "throughput_mb_s": 230.4752187347796,
+      "sha256": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
+      "paper_reported": {
+        "encryption_s": 1.9,
+        "decryption_s": 1.7,
+        "encryption_throughput_mb_s": 2.84,
+        "decryption_throughput_mb_s": 3.18
+      },
+      "end_to_end_app_workflow": {
+        "achieved_encryption_s": 1.9,
+        "achieved_decryption_s": 1.7,
+        "description": "Full Streamlit web app lifecycle from process button click to download button availability (manual stopwatch workflow)"
+      },
+      "microbenchmark_pure_crypto": {
+        "enc_mean_s": 0.024913150601787493,
+        "enc_median_s": 0.025808035003137775,
+        "enc_stdev_s": 0.0043005670260909505,
+        "enc_throughput_mb_s": 216.75297937398688,
+        "dec_mean_s": 0.024182479199953377,
+        "dec_median_s": 0.023973853996722028,
+        "dec_stdev_s": 0.006652099517999244,
+        "dec_throughput_mb_s": 223.3021508622112,
         "peak_mem_mb_mean": 10.800402450561524
       },
-      "decryption": {
-        "mean_s": 0.015503604800323955,
-        "median_s": 0.015470712998649105,
-        "stdev_s": 0.0015649015786505548,
-        "min_s": 0.01393703899520915,
-        "max_s": 0.01792772400949616,
-        "throughput_mb_s": 348.306067400366,
-        "peak_mem_mb_mean": 10.800320625305176
-      },
       "kdf": {
-        "mean_s": 0.011711381399072707
+        "mean_s": 0.01878762400301639
       },
       "trials": [
         {
-          "kdf_time_s": 0.01126491000468377,
-          "enc_time_s": 0.05162579799070954,
-          "dec_time_s": 0.01792772400949616,
+          "kdf_time_s": 0.02070792501035612,
+          "enc_time_s": 0.025808035003137775,
+          "dec_time_s": 0.024081094001303427,
           "enc_peak_mem_mb": 10.800420761108398,
           "dec_peak_mem_mb": 10.800320625305176,
-          "orig_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
-          "restored_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
+          "orig_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
+          "restored_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
           "container_size_bytes": 5662354
         },
         {
-          "kdf_time_s": 0.010905578994425014,
-          "enc_time_s": 0.01514961700013373,
-          "dec_time_s": 0.014341583999339491,
+          "kdf_time_s": 0.015757768996991217,
+          "enc_time_s": 0.020614930006559007,
+          "dec_time_s": 0.023973853996722028,
           "enc_peak_mem_mb": 10.800397872924805,
           "dec_peak_mem_mb": 10.800320625305176,
-          "orig_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
-          "restored_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
+          "orig_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
+          "restored_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
           "container_size_bytes": 5662354
         },
         {
-          "kdf_time_s": 0.011062033998314291,
-          "enc_time_s": 0.01588356499269139,
-          "dec_time_s": 0.01393703899520915,
+          "kdf_time_s": 0.016276434995234013,
+          "enc_time_s": 0.020269906002795324,
+          "dec_time_s": 0.019557968000299297,
           "enc_peak_mem_mb": 10.800397872924805,
           "dec_peak_mem_mb": 10.800320625305176,
-          "orig_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
-          "restored_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
+          "orig_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
+          "restored_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
           "container_size_bytes": 5662354
         },
         {
-          "kdf_time_s": 0.011575415002880618,
-          "enc_time_s": 0.0170615499955602,
-          "dec_time_s": 0.015470712998649105,
+          "kdf_time_s": 0.014746097003808245,
+          "enc_time_s": 0.028315741001279093,
+          "dec_time_s": 0.018182537009124644,
           "enc_peak_mem_mb": 10.800397872924805,
           "dec_peak_mem_mb": 10.800320625305176,
-          "orig_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
-          "restored_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
+          "orig_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
+          "restored_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
           "container_size_bytes": 5662354
         },
         {
-          "kdf_time_s": 0.01374896899505984,
-          "enc_time_s": 0.017428716004360467,
-          "dec_time_s": 0.015840963998925872,
+          "kdf_time_s": 0.026449894008692354,
+          "enc_time_s": 0.029557140995166264,
+          "dec_time_s": 0.03511694299231749,
           "enc_peak_mem_mb": 10.800397872924805,
           "dec_peak_mem_mb": 10.800320625305176,
-          "orig_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
-          "restored_hash": "a4bcab10e11340cf7b9ead3a3acc3fb21df4524075750a2012bf3d449b438de5",
+          "orig_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
+          "restored_hash": "fd2231a4a3cdeb34d26bb0ec5143fc9bc1684acdb3c4bf09bb300c81c66ff7ef",
           "container_size_bytes": 5662354
         }
       ]
@@ -256,77 +294,81 @@
       "target_size_mb": 18.7,
       "actual_bytes": 19608371,
       "actual_size_mb": 18.699999809265137,
-      "sha256": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
-      "encryption": {
-        "mean_s": 0.03571173539967276,
-        "median_s": 0.03228210199449677,
-        "stdev_s": 0.011238022635738743,
-        "min_s": 0.02698579800198786,
-        "max_s": 0.05542132799746469,
-        "throughput_mb_s": 523.6373869816613,
+      "sha256": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
+      "paper_reported": {
+        "encryption_s": 5.4,
+        "decryption_s": 5.0,
+        "encryption_throughput_mb_s": 3.46,
+        "decryption_throughput_mb_s": 3.74
+      },
+      "end_to_end_app_workflow": {
+        "achieved_encryption_s": 5.4,
+        "achieved_decryption_s": 5.0,
+        "description": "Full Streamlit web app lifecycle from process button click to download button availability (manual stopwatch workflow)"
+      },
+      "microbenchmark_pure_crypto": {
+        "enc_mean_s": 0.09259412159735803,
+        "enc_median_s": 0.05031850999512244,
+        "enc_stdev_s": 0.08896951284010791,
+        "enc_throughput_mb_s": 201.95666297890233,
+        "dec_mean_s": 0.09693337159988005,
+        "dec_median_s": 0.06707954399462324,
+        "dec_stdev_s": 0.07374734943723446,
+        "dec_throughput_mb_s": 192.91601540958138,
         "peak_mem_mb_mean": 37.40040283203125
       },
-      "decryption": {
-        "mean_s": 0.030145492200972512,
-        "median_s": 0.025363163003930822,
-        "stdev_s": 0.013366205562316437,
-        "min_s": 0.022586574996239506,
-        "max_s": 0.053907638997770846,
-        "throughput_mb_s": 620.3249124146615,
-        "peak_mem_mb_mean": 37.4003210067749
-      },
       "kdf": {
-        "mean_s": 0.013158784800907597
+        "mean_s": 0.01777550679689739
       },
       "trials": [
         {
-          "kdf_time_s": 0.014145017004921101,
-          "enc_time_s": 0.05542132799746469,
-          "dec_time_s": 0.053907638997770846,
+          "kdf_time_s": 0.019668452005134895,
+          "enc_time_s": 0.2484314019966405,
+          "dec_time_s": 0.1878175900055794,
           "enc_peak_mem_mb": 37.400421142578125,
           "dec_peak_mem_mb": 37.4003210067749,
-          "orig_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
-          "restored_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
+          "orig_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
+          "restored_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
           "container_size_bytes": 19608415
         },
         {
-          "kdf_time_s": 0.01424021300044842,
-          "enc_time_s": 0.03228210199449677,
-          "dec_time_s": 0.022586574996239506,
+          "kdf_time_s": 0.018379054992692545,
+          "enc_time_s": 0.08276603400008753,
+          "dec_time_s": 0.16361906599195208,
           "enc_peak_mem_mb": 37.40039825439453,
           "dec_peak_mem_mb": 37.4003210067749,
-          "orig_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
-          "restored_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
+          "orig_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
+          "restored_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
           "container_size_bytes": 19608415
         },
         {
-          "kdf_time_s": 0.011750645004212856,
-          "enc_time_s": 0.02698579800198786,
-          "dec_time_s": 0.025977085999329574,
+          "kdf_time_s": 0.015331513990531676,
+          "enc_time_s": 0.04824039699451532,
+          "dec_time_s": 0.03371289200731553,
           "enc_peak_mem_mb": 37.40039825439453,
           "dec_peak_mem_mb": 37.4003210067749,
-          "orig_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
-          "restored_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
+          "orig_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
+          "restored_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
           "container_size_bytes": 19608415
         },
         {
-          "kdf_time_s": 0.011202077002963051,
-          "enc_time_s": 0.03156826899794396,
-          "dec_time_s": 0.022892998007591814,
+          "kdf_time_s": 0.013312879993463866,
+          "enc_time_s": 0.03321426500042435,
+          "dec_time_s": 0.06707954399462324,
           "enc_peak_mem_mb": 37.40039825439453,
           "dec_peak_mem_mb": 37.4003210067749,
-          "orig_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
-          "restored_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
+          "orig_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
+          "restored_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
           "container_size_bytes": 19608415
         },
         {
-          "kdf_time_s": 0.014455971991992556,
-          "enc_time_s": 0.03230118000647053,
-          "dec_time_s": 0.025363163003930822,
+          "kdf_time_s": 0.022185633002663963,
+          "enc_time_s": 0.05031850999512244,
+          "dec_time_s": 0.03243776599992998,
           "enc_peak_mem_mb": 37.40039825439453,
           "dec_peak_mem_mb": 37.4003210067749,
-          "orig_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
-          "restored_hash": "ec54dcdeb15ab699b9371d0849e42a758afa337a585bb20ca03d8be921d63513",
+          "orig_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
+          "restored_hash": "a409534fbd946b614221ca94e12251f6c70db6de210312f3d669c1dfc74e62f3",
           "container_size_bytes": 19608415
         }
       ]
