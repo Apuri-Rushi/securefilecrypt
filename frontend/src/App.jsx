@@ -1,15 +1,15 @@
 import React from 'react';
-import { 
-  ShieldCheck, 
-  Lock, 
-  Unlock, 
-  RotateCw, 
-  BarChart3, 
+import {
+  ShieldCheck,
+  Lock,
+  Unlock,
+  RotateCw,
+  BarChart3,
   Zap,
   Clock
 } from 'lucide-react';
-import { 
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend 
+import {
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend
 } from 'recharts';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -25,20 +25,20 @@ const BENCHMARK_DATA = [
 ];
 
 export default function App() {
-  const [activeTab, setActiveTab] = React. useState('crypto'); // 'crypto' | 'benchmarks' | 'envelope'
+  const [activeTab, setActiveTab] = React.useState('crypto'); // 'crypto' | 'benchmarks' | 'envelope'
   const [mode, setMode] = React.useState('improved'); // 'baseline' | 'improved'
   const [operation, setOperation] = React.useState('encrypt'); // 'encrypt' | 'decrypt'
-  
+
   const [file, setFile] = React.useState(null);
   const [password, setPassword] = React.useState('');
   const [oldPassword, setOldPassword] = React.useState('');
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmNewPassword, setConfirmNewPassword] = React.useState('');
-  
+
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [successMsg, setSuccessMsg] = React.useState(null);
-  
+
   // Real-time telemetry recorded from backend response
   const [telemetry, setTelemetry] = React.useState(null);
 
@@ -206,13 +206,13 @@ export default function App() {
           </div>
           <div>
             <h1 style={{ fontSize: '22px', fontWeight: '800', letterSpacing: '-0.5px' }}>SecureFileCrypt</h1>
-            <p style={{ fontSize: '13px', color: '#9ca3af' }}>AES-256 Baseline Reproduction (418.pdf) & Verified Improvement Suite</p>
+            <p style={{ fontSize: '13px', color: '#9ca3af' }}>AES-256 Baseline Reproduction  & Verified Improvement Suite</p>
           </div>
         </div>
 
         {/* Global Mode Switcher */}
         <div style={{ display: 'flex', background: '#111827', padding: '4px', borderRadius: '9999px', border: '1px solid #374151' }}>
-          <button 
+          <button
             onClick={() => setMode('baseline')}
             style={{
               padding: '8px 16px',
@@ -226,9 +226,9 @@ export default function App() {
               transition: 'all 0.2s ease'
             }}
           >
-            Baseline (418.pdf)
+            Baseline
           </button>
-          <button 
+          <button
             onClick={() => setMode('improved')}
             style={{
               padding: '8px 16px',
@@ -250,7 +250,7 @@ export default function App() {
 
       {/* Tab Navigation */}
       <nav style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
-        <button 
+        <button
           onClick={() => setActiveTab('crypto')}
           style={{
             display: 'flex', alignItems: 'center', gap: '8px',
@@ -263,7 +263,7 @@ export default function App() {
         >
           <Lock size={16} /> Cryptographic Lab
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('envelope')}
           style={{
             display: 'flex', alignItems: 'center', gap: '8px',
@@ -276,7 +276,7 @@ export default function App() {
         >
           <RotateCw size={16} /> O(1) Instant Key Rotation
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('benchmarks')}
           style={{
             display: 'flex', alignItems: 'center', gap: '8px',
@@ -308,8 +308,8 @@ export default function App() {
                   {mode === 'baseline' ? 'Target: Baseline Model (418.pdf)' : 'Target: Improved System (AGY2)'}
                 </span>
                 <p style={{ fontSize: '13px', color: '#e5e7eb', marginTop: '2px' }}>
-                  {mode === 'baseline' 
-                    ? 'Monolithic AES-256-GCM, PBKDF2-HMAC-SHA256, O(N) memory scaling' 
+                  {mode === 'baseline'
+                    ? 'Monolithic AES-256-GCM, PBKDF2-HMAC-SHA256, O(N) memory scaling'
                     : '64 KB Chunked Streaming AEAD, Argon2id (RFC 9106), Bounded O(1) RAM'}
                 </p>
               </div>
@@ -317,7 +317,7 @@ export default function App() {
 
             {/* Operation Selector */}
             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-              <button 
+              <button
                 type="button"
                 onClick={() => setOperation('encrypt')}
                 style={{
@@ -328,7 +328,7 @@ export default function App() {
               >
                 <Lock size={14} style={{ display: 'inline', marginRight: '6px' }} /> Encrypt File
               </button>
-              <button 
+              <button
                 type="button"
                 onClick={() => setOperation('decrypt')}
                 style={{
@@ -347,8 +347,8 @@ export default function App() {
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '8px' }}>
                   Select File ({operation === 'encrypt' ? 'Any format: PDF, PNG, MP4, etc.' : '.enc Container'})
                 </label>
-                <input 
-                  type="file" 
+                <input
+                  type="file"
                   onChange={handleFileChange}
                   style={{
                     width: '100%', padding: '12px', background: '#111827', border: '1px dashed #4b5563',
@@ -367,8 +367,8 @@ export default function App() {
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '8px' }}>
                   Secret Passphrase
                 </label>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   placeholder="Enter strong secret key..."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -380,8 +380,8 @@ export default function App() {
               </div>
 
               {/* Submit */}
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={loading}
                 style={{
                   width: '100%', padding: '14px', borderRadius: '10px', fontSize: '14px', fontWeight: '700',
@@ -437,9 +437,9 @@ export default function App() {
                     </span>
                   </div>
                   <div style={{ width: '100%', height: '8px', background: '#374151', borderRadius: '4px', overflow: 'hidden' }}>
-                    <div style={{ 
-                      width: mode === 'baseline' ? '90%' : '15%', 
-                      height: '100%', 
+                    <div style={{
+                      width: mode === 'baseline' ? '90%' : '15%',
+                      height: '100%',
                       background: mode === 'baseline' ? '#e11d48' : '#06b6d4',
                       borderRadius: '4px'
                     }} />
@@ -477,7 +477,7 @@ export default function App() {
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: '700' }}>Instantaneous O(1) Password Rotation (Envelope DEK Re-wrapping)</h2>
               <p style={{ fontSize: '13px', color: '#9ca3af', marginTop: '4px' }}>
-                In the <strong>418.pdf Baseline</strong>, modifying a password forces the user to decrypt and re-encrypt the entire payload (taking up to a minute for multi-gigabyte files). 
+                In the <strong>418.pdf Baseline</strong>, modifying a password forces the user to decrypt and re-encrypt the entire payload (taking up to a minute for multi-gigabyte files).
                 In our <strong>Improved System</strong>, the payload is protected by a 32-byte Data Encryption Key (DEK). Only the DEK header is re-wrapped in <strong>0.05 seconds</strong>.
               </p>
             </div>
@@ -488,8 +488,8 @@ export default function App() {
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '8px' }}>
                 Select Encrypted File (.enc)
               </label>
-              <input 
-                type="file" 
+              <input
+                type="file"
                 onChange={handleFileChange}
                 style={{
                   width: '100%', padding: '12px', background: '#111827', border: '1px dashed #4b5563',
@@ -503,8 +503,8 @@ export default function App() {
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '6px' }}>
                   Current Old Password
                 </label>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   placeholder="Old password..."
@@ -515,8 +515,8 @@ export default function App() {
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '6px' }}>
                   New Password
                 </label>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New password..."
@@ -538,8 +538,8 @@ export default function App() {
               />
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
               style={{
                 padding: '14px 28px', borderRadius: '10px', fontSize: '14px', fontWeight: '700',
@@ -598,7 +598,7 @@ export default function App() {
                   <YAxis stroke="#9ca3af" tickFormatter={(v) => `${v} MB`} />
                   <Tooltip contentStyle={{ background: '#111827', borderColor: '#374151', color: '#fff' }} />
                   <Legend />
-                  <Line type="monotone" dataKey="baseRam" name="Baseline Peak RAM (O(N))" stroke="#f43f5e" strokeWidth={3} />
+                  <Line type="monotone" dataKey="baseRam" name="Baseline Peak RAM (O(N))" stroke="#6c091aff" strokeWidth={3} />
                   <Line type="monotone" dataKey="imprRam" name="Improved Peak RAM (O(1))" stroke="#10b981" strokeWidth={3} />
                 </LineChart>
               </ResponsiveContainer>
