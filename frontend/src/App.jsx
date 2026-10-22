@@ -1,22 +1,18 @@
 import React from 'react';
 import { 
   ShieldCheck, 
-  Cpu, 
-  HardDrive, 
-  Layers, 
   Lock, 
   Unlock, 
   RotateCw, 
   BarChart3, 
-  FlaskConical, 
-  Sparkles,
   Zap,
-  Clock,
-  ArrowRight
+  Clock
 } from 'lucide-react';
 import { 
   LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend 
 } from 'recharts';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
 // Empirical benchmark data loaded for real-time visualization
 const BENCHMARK_DATA = [
@@ -37,6 +33,7 @@ export default function App() {
   const [password, setPassword] = React.useState('');
   const [oldPassword, setOldPassword] = React.useState('');
   const [newPassword, setNewPassword] = React.useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = React.useState('');
   
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
@@ -73,7 +70,7 @@ export default function App() {
     formData.append("password", password);
     formData.append("mode", mode);
 
-    const endpoint = operation === 'encrypt' ? 'http://127.0.0.1:8000/api/encrypt' : 'http://127.0.0.1:8000/api/decrypt';
+    const endpoint = operation === 'encrypt' ? `${API_BASE}/api/encrypt` : `${API_BASE}/api/decrypt`;
 
     try {
       const response = await fetch(endpoint, {
@@ -95,12 +92,12 @@ export default function App() {
       const arch = response.headers.get("X-Architecture");
 
       setTelemetry({
-        execTime: execTime || "0.05",
-        peakRam: peakRam || "1.5",
-        throughput: throughput || "120.0",
-        kdf: kdf || (mode === 'baseline' ? 'PBKDF2-HMAC-SHA256' : 'Argon2id (RFC 9106)'),
-        kdfCost: kdfCost || (mode === 'baseline' ? '0 MB RAM' : '64 MB RAM, t=2, p=4'),
-        arch: arch || (mode === 'baseline' ? 'Monolithic AES-256-GCM' : 'Chunked Streaming AEAD')
+        execTime: execTime !== null ? execTime : "N/A",
+        peakRam: peakRam !== null ? peakRam : "N/A",
+        throughput: throughput !== null ? throughput : "N/A",
+        kdf: kdf !== null ? kdf : (mode === 'baseline' ? 'PBKDF2-HMAC-SHA256' : 'Argon2id (RFC 9106)'),
+        kdfCost: kdfCost !== null ? kdfCost : (mode === 'baseline' ? '0 MB RAM' : '64 MB RAM, t=2, p=4'),
+        arch: arch !== null ? arch : (mode === 'baseline' ? 'Monolithic AES-256-GCM' : 'Chunked Streaming AEAD')
       });
 
       // Trigger automatic file download
@@ -139,6 +136,10 @@ export default function App() {
       setError("Both old and new passwords are required.");
       return;
     }
+    if (newPassword !== confirmNewPassword) {
+      setError("New password and confirmation do not match.");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -150,7 +151,7 @@ export default function App() {
     formData.append("new_password", newPassword);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/rewrap-password", {
+      const response = await fetch(`${API_BASE}/api/rewrap-password`, {
         method: "POST",
         body: formData
       });
@@ -164,8 +165,8 @@ export default function App() {
       const peakRam = response.headers.get("X-Peak-Ram-Mb");
 
       setTelemetry({
-        execTime: execTime || "0.03",
-        peakRam: peakRam || "0.1",
+        execTime: execTime !== null ? execTime : "N/A",
+        peakRam: peakRam !== null ? peakRam : "N/A",
         throughput: "Instantaneous",
         kdf: "Dual Argon2id KDF Re-wrap",
         kdfCost: "64 MB RAM",
@@ -181,6 +182,11 @@ export default function App() {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
+
+      // Clear sensitive password inputs upon successful rotation
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
 
       setSuccessMsg("Instantaneous Password Rotation Successful! 32-byte DEK re-wrapped without touching payload.");
     } catch (err) {
@@ -492,7 +498,7 @@ export default function App() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '6px' }}>
                   Current Old Password
@@ -517,6 +523,19 @@ export default function App() {
                   style={{ width: '100%', padding: '12px', background: '#111827', border: '1px solid #374151', borderRadius: '10px', color: '#fff' }}
                 />
               </div>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#9ca3af', marginBottom: '6px' }}>
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                placeholder="Confirm new password..."
+                style={{ width: '100%', padding: '12px', background: '#111827', border: '1px solid #374151', borderRadius: '10px', color: '#fff' }}
+              />
             </div>
 
             <button 
