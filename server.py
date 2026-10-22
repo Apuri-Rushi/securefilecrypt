@@ -72,8 +72,7 @@ async def encrypt_file(
     try:
         if mode == "baseline":
             # Baseline reproduction: PBKDF2-HMAC-SHA256 + Monolithic AES-256-GCM
-            salt, nonce, ciphertext = base_crypto.encrypt_file_data(content, password)
-            packaged = base_format.package_container(salt, nonce, ciphertext)
+            packaged = base_crypto.encrypt_bytes(content, password)
             output_filename = f"{file.filename}.enc"
             kdf_name = "PBKDF2-HMAC-SHA256 (100k iter)"
             kdf_cost = "0 MB RAM (Standard)"
@@ -150,8 +149,7 @@ async def decrypt_file(
 
     try:
         if mode == "baseline":
-            salt, nonce, ciphertext = base_format.parse_container(content)
-            plaintext = base_crypto.decrypt_file_data(salt, nonce, ciphertext, password)
+            plaintext = base_crypto.decrypt_bytes(content, password)
             original_filename = file.filename[:-4] if file.filename.endswith(".enc") else f"decrypted_{file.filename}"
             kdf_name = "PBKDF2-HMAC-SHA256 (100k iter)"
         else:
@@ -188,7 +186,7 @@ async def decrypt_file(
 
         return Response(content=plaintext, media_type="application/octet-stream", headers=headers)
 
-    except base_crypto.DecryptionError:
+    except base_crypto.AuthenticationError:
         tracemalloc.stop()
         raise HTTPException(status_code=400, detail="Baseline Authentication Failed: Incorrect password or corrupted payload.")
     except impr_crypto.AuthenticationError:

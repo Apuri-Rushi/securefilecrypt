@@ -13,11 +13,13 @@ if str(ROOT) not in sys.path:
 if __name__ == "__main__":
     try:
         import pytest
-        sys.exit(pytest.main(["baseline/tests", "-v"]))
+        sys.exit(pytest.main(["baseline/tests", "improved/tests", "-v"]))
     except ImportError:
         import unittest
         loader = unittest.TestLoader()
-        suite = loader.discover("baseline/tests", pattern="test_*.py")
+        suite_base = loader.discover("baseline/tests", pattern="test_*.py")
+        suite_impr = loader.discover("improved/tests", pattern="test_*.py")
+        suite = unittest.TestSuite([suite_base, suite_impr])
         runner = unittest.TextTestRunner(verbosity=2)
         result = runner.run(suite)
         sys.exit(0 if result.wasSuccessful() else 1)
