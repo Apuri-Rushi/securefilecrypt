@@ -16,6 +16,12 @@ __pycache__/
 benchmark/test_data/
 benchmark/results/*.raw
 
+# Environment variables & local secrets
+.env
+.env.local
+.env.*
+!.env.example
+
 # OS files
 .DS_Store
 Thumbs.db

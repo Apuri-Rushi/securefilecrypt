@@ -91,10 +91,11 @@ async def encrypt_file(
             }
 
             impr_crypto.encrypt_stream(
-                in_stream=in_stream,
-                out_stream=out_stream,
+                input_stream=in_stream,
+                output_stream=out_stream,
                 password=password,
-                metadata=metadata,
+                filename=file.filename or "file.bin",
+                mime_type=file.content_type or "application/octet-stream",
                 chunk_size=64 * 1024
             )
             packaged = out_stream.getvalue()
@@ -159,8 +160,8 @@ async def decrypt_file(
             out_stream = io.BytesIO()
 
             metadata = impr_crypto.decrypt_stream(
-                in_stream=in_stream,
-                out_stream=out_stream,
+                input_stream=in_stream,
+                output_stream=out_stream,
                 password=password
             )
             plaintext = out_stream.getvalue()
@@ -219,9 +220,9 @@ async def rewrap_password(
         in_stream = io.BytesIO(content)
         out_stream = io.BytesIO()
 
-        impr_crypto.rewrap_stream_password(
-            in_stream=in_stream,
-            out_stream=out_stream,
+        impr_crypto.change_password_stream(
+            input_stream=in_stream,
+            output_stream=out_stream,
             old_password=old_password,
             new_password=new_password
         )
