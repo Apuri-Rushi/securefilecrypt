@@ -66,6 +66,66 @@ class TestImprovedFunctional:
         assert sha256_hash(restored) == sha256_hash(plaintext)
         assert meta["filename"] == fname
 
+    def test_unicode_and_special_filenames(self):
+        """Confirm Unicode filenames, emojis, spaces, and international scripts roundtrip safely."""
+        test_names = [
+            "résumé_2026.pdf",
+            "機密文書_classified.txt",
+            "تقرير_سري_2026.dat",
+            "report with spaces and (special) [chars] #1.doc",
+            "🔒_secure_vault_🚀.bin",
+            "archive.tar.gz.enc.bak",
+            "no_extension_file",
+        ]
+        plaintext = b"Payload for internationalized filename verification."
+        password = "UnicodeTestPass123!"
+
+        for name in test_names:
+            container = encrypt_bytes(plaintext, password, filename=name)
+            restored, meta = decrypt_bytes(container, password)
+            assert restored == plaintext
+            assert meta["filename"] == name
+
+    def test_long_filename_handling(self):
+        """Confirm filenames exceeding 200 characters are handled safely without truncation bugs."""
+        long_name = "a" * 200 + ".data"
+        plaintext = b"Payload for long filename test."
+        password = "LongNamePassword!"
+
+        container = encrypt_bytes(plaintext, password, filename=long_name)
+        restored, meta = decrypt_bytes(container, password)
+        assert restored == plaintext
+        assert meta["filename"] == long_name
+
+    def test_all_256_byte_values_fidelity(self):
+        """Confirm exact roundtrip on data containing all 256 possible byte values."""
+        plaintext = bytes(range(256)) * 64  # 16 KB covering all byte values
+        password = "AllBytesPassword!"
+
+        container = encrypt_bytes(plaintext, password, filename="all_bytes.bin")
+        restored, meta = decrypt_bytes(container, password)
+        assert restored == plaintext
+        assert sha256_hash(restored) == sha256_hash(plaintext)
+
+    def test_version_1_legacy_compatibility(self):
+        """
+        Verify that containers encrypted under Version 1 (legacy header AAD)
+        decrypt successfully and transparently in the updated Version 2 engine.
+        """
+        plaintext = b"Critical backward compatibility legacy payload."
+        password = "LegacyV1Password!"
+        fname = "v1_document.txt"
+
+        # Explicitly produce a Version 1 container
+        container_v1 = encrypt_bytes(plaintext, password, filename=fname, version=1)
+        header = ContainerHeader.deserialize(container_v1)
+        assert header.version == 1
+
+        # Decrypt using default engine
+        restored, meta = decrypt_bytes(container_v1, password)
+        assert restored == plaintext
+        assert meta["filename"] == fname
+
     def test_cryptographic_freshness(self):
         """Confirm repeated encryption of same data produces unique containers, salts, and DEKs."""
         plaintext = b"Payload for probabilistic verification"
@@ -85,3 +145,5 @@ class TestImprovedFunctional:
         assert h1.wrapped_dek != h2.wrapped_dek
         assert h1.stream_nonce_prefix != h2.stream_nonce_prefix
         assert h1.file_id != h2.file_id
+
+

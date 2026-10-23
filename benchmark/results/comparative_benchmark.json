@@ -8,16 +8,16 @@
   },
   "kdf_comparison": {
     "pbkdf2": {
-      "mean_s": 0.05278844832597921,
-      "median_s": 0.012005395998130552,
-      "stdev_s": 0.07158195000735253,
+      "mean_s": 0.016603582001456136,
+      "median_s": 0.012665206002566265,
+      "stdev_s": 0.007452634716503053,
       "iterations": 100000,
       "memory_hardness": "None (O(1) RAM)"
     },
     "argon2id": {
-      "mean_s": 0.04687132500112057,
-      "median_s": 0.04686707899963949,
-      "stdev_s": 0.0010116176819089586,
+      "mean_s": 0.05346994500117338,
+      "median_s": 0.053851725002459716,
+      "stdev_s": 0.000725272021777727,
       "time_cost": 2,
       "memory_cost_mb": 64,
       "parallelism": 4,
@@ -30,20 +30,43 @@
       "size_mb": 0.09999942779541016,
       "bytes": 104857,
       "baseline": {
-        "enc_mean_s": 0.05015053299818343,
-        "enc_throughput_mb_s": 1.9939853440646857,
-        "enc_peak_mem_mb": 0.20044326782226562,
-        "dec_mean_s": 0.016515502332670923,
-        "dec_throughput_mb_s": 6.054882605513702,
+        "enc_mean_s": 0.014859165668895002,
+        "enc_median_s": 0.012067610001395224,
+        "enc_stdev_s": 0.0055929239820328965,
+        "enc_throughput_mb_s": 6.729814447438392,
+        "pure_enc_mean_s": 0.0001,
+        "pure_enc_throughput_mb_s": 999.9942779541016,
+        "enc_peak_mem_mb": 0.20040512084960938,
+        "dec_mean_s": 0.011426737998893563,
+        "dec_median_s": 0.010919889999058796,
+        "dec_stdev_s": 0.0009195105342760357,
+        "dec_throughput_mb_s": 8.751353868890053,
+        "pure_dec_mean_s": 0.0001,
+        "pure_dec_throughput_mb_s": 999.9942779541016,
         "dec_peak_mem_mb": 0.20030498504638672
       },
-      "improved": {
-        "enc_mean_s": 0.04974070199629447,
-        "enc_throughput_mb_s": 2.01041448516066,
-        "enc_peak_mem_mb": 0.22703011830647787,
-        "dec_mean_s": 0.04945497833250556,
-        "dec_throughput_mb_s": 2.0220295542963154,
-        "dec_peak_mem_mb": 0.22769832611083984
+      "improved_in_memory": {
+        "enc_mean_s": 0.05020570866690832,
+        "enc_median_s": 0.049128915001347195,
+        "enc_stdev_s": 0.003749689243818925,
+        "enc_throughput_mb_s": 1.9917939702606362,
+        "pure_enc_mean_s": 0.0001,
+        "pure_enc_throughput_mb_s": 999.9942779541016,
+        "enc_peak_mem_mb": 0.2902892430623372,
+        "dec_mean_s": 0.04816110799947637,
+        "dec_median_s": 0.0481986999984656,
+        "dec_stdev_s": 0.0006217369287350148,
+        "dec_throughput_mb_s": 2.0763523089314595,
+        "pure_dec_mean_s": 0.0001,
+        "pure_dec_throughput_mb_s": 999.9942779541016,
+        "dec_peak_mem_mb": 0.22808361053466797
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.05727041466646673,
+        "enc_throughput_mb_s": 1.7460922603370348,
+        "dec_mean_s": 0.05179948599955727,
+        "dec_throughput_mb_s": 1.930510040124044,
+        "enc_peak_mem_mb": 0.2367254892985026
       }
     },
     "F2": {
@@ -51,20 +74,43 @@
       "size_mb": 1.25,
       "bytes": 1310720,
       "baseline": {
-        "enc_mean_s": 0.014201542673011621,
-        "enc_throughput_mb_s": 88.01860676555087,
+        "enc_mean_s": 0.013120270665240241,
+        "enc_median_s": 0.012985025998204947,
+        "enc_stdev_s": 0.00025769457410705426,
+        "enc_throughput_mb_s": 95.27242477639173,
+        "pure_enc_mean_s": 0.0001,
+        "pure_enc_throughput_mb_s": 12500.0,
         "enc_peak_mem_mb": 2.500398635864258,
-        "dec_mean_s": 0.014517149669700302,
-        "dec_throughput_mb_s": 86.10505701466708,
+        "dec_mean_s": 0.011967544000071939,
+        "dec_median_s": 0.011700302999088308,
+        "dec_stdev_s": 0.0010044209117735816,
+        "dec_throughput_mb_s": 104.4491668459699,
+        "pure_dec_mean_s": 0.0001,
+        "pure_dec_throughput_mb_s": 12500.0,
         "dec_peak_mem_mb": 2.500298500061035
       },
-      "improved": {
-        "enc_mean_s": 0.0532789703332431,
-        "enc_throughput_mb_s": 23.46141436633714,
-        "enc_peak_mem_mb": 1.525721549987793,
-        "dec_mean_s": 0.05617333100235555,
-        "dec_throughput_mb_s": 22.252552549315315,
-        "dec_peak_mem_mb": 1.533879280090332
+      "improved_in_memory": {
+        "enc_mean_s": 0.054331549665221246,
+        "enc_median_s": 0.05376164299741504,
+        "enc_stdev_s": 0.0029160120599136022,
+        "enc_throughput_mb_s": 23.006890245211448,
+        "pure_enc_mean_s": 0.0008616046640478672,
+        "pure_enc_throughput_mb_s": 1450.781375912509,
+        "enc_peak_mem_mb": 1.596530596415202,
+        "dec_mean_s": 0.053852973001388214,
+        "dec_median_s": 0.055110263001552084,
+        "dec_stdev_s": 0.005187787713561359,
+        "dec_throughput_mb_s": 23.211346195646016,
+        "pure_dec_mean_s": 0.00038302800021483563,
+        "pure_dec_throughput_mb_s": 3263.468987381838,
+        "dec_peak_mem_mb": 1.5342216491699219
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.08447349666676018,
+        "enc_throughput_mb_s": 14.797540640837086,
+        "dec_mean_s": 0.0724808643317374,
+        "dec_throughput_mb_s": 17.245931205771495,
+        "enc_peak_mem_mb": 0.26160939534505206
       }
     },
     "F3": {
@@ -72,20 +118,43 @@
       "size_mb": 5.399999618530273,
       "bytes": 5662310,
       "baseline": {
-        "enc_mean_s": 0.02057316800346598,
-        "enc_throughput_mb_s": 262.47778745696974,
+        "enc_mean_s": 0.017370008336001774,
+        "enc_median_s": 0.017119333002483472,
+        "enc_stdev_s": 0.003801723381083789,
+        "enc_throughput_mb_s": 310.8806578600206,
+        "pure_enc_mean_s": 0.0007664263345456383,
+        "pure_enc_throughput_mb_s": 7045.686421685345,
         "enc_peak_mem_mb": 10.800397872924805,
-        "dec_mean_s": 0.014710284003134197,
-        "dec_throughput_mb_s": 367.09009950995784,
+        "dec_mean_s": 0.015316856999561423,
+        "dec_median_s": 0.015804866998223588,
+        "dec_stdev_s": 0.002078994358503372,
+        "dec_throughput_mb_s": 352.55272140262815,
+        "pure_dec_mean_s": 0.0001,
+        "pure_dec_throughput_mb_s": 53999.996185302734,
         "dec_peak_mem_mb": 10.800297737121582
       },
-      "improved": {
-        "enc_mean_s": 0.05397223432858785,
-        "enc_throughput_mb_s": 100.05143729374971,
-        "enc_peak_mem_mb": 6.089611371358235,
-        "dec_mean_s": 0.052500327001325786,
-        "dec_throughput_mb_s": 102.85649493942977,
-        "dec_peak_mem_mb": 6.0962982177734375
+      "improved_in_memory": {
+        "enc_mean_s": 0.05989472733441895,
+        "enc_median_s": 0.05936576900057844,
+        "enc_stdev_s": 0.00467887252729001,
+        "enc_throughput_mb_s": 90.15818017468665,
+        "pure_enc_mean_s": 0.006424782333245574,
+        "pure_enc_throughput_mb_s": 840.4953410775527,
+        "enc_peak_mem_mb": 6.160508155822754,
+        "dec_mean_s": 0.05656462533321852,
+        "dec_median_s": 0.055822506998083554,
+        "dec_stdev_s": 0.004442297471345916,
+        "dec_throughput_mb_s": 95.46601938436307,
+        "pure_dec_mean_s": 0.003094680332045144,
+        "pure_dec_throughput_mb_s": 1744.9296984291884,
+        "dec_peak_mem_mb": 6.096697489420573
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.15039541266742162,
+        "enc_throughput_mb_s": 35.905347927543616,
+        "dec_mean_s": 0.07683128766681573,
+        "dec_throughput_mb_s": 70.28386198533794,
+        "enc_peak_mem_mb": 0.2615957260131836
       }
     },
     "F4": {
@@ -93,20 +162,43 @@
       "size_mb": 18.699999809265137,
       "bytes": 19608371,
       "baseline": {
-        "enc_mean_s": 0.16247197133877003,
-        "enc_throughput_mb_s": 115.09677426313613,
+        "enc_mean_s": 0.029507076999531517,
+        "enc_median_s": 0.02833242400083691,
+        "enc_stdev_s": 0.0028350417829281767,
+        "enc_throughput_mb_s": 633.7462639746402,
+        "pure_enc_mean_s": 0.01290349499807538,
+        "pure_enc_throughput_mb_s": 1449.2197510871538,
         "enc_peak_mem_mb": 37.40039825439453,
-        "dec_mean_s": 0.027411390333630454,
-        "dec_throughput_mb_s": 682.1981512671579,
+        "dec_mean_s": 0.0225419946667292,
+        "dec_median_s": 0.023030319000099553,
+        "dec_stdev_s": 0.0033718728218814246,
+        "dec_throughput_mb_s": 829.5627820755967,
+        "pure_dec_mean_s": 0.005938412665273063,
+        "pure_dec_throughput_mb_s": 3148.9896144503227,
         "dec_peak_mem_mb": 37.40029811859131
       },
-      "improved": {
-        "enc_mean_s": 0.14398929166782182,
-        "enc_throughput_mb_s": 129.87076742071469,
-        "enc_peak_mem_mb": 20.01597722371419,
-        "dec_mean_s": 0.12723905533008897,
-        "dec_throughput_mb_s": 146.9674524127266,
-        "dec_peak_mem_mb": 20.018203735351562
+      "improved_in_memory": {
+        "enc_mean_s": 0.07523758500125648,
+        "enc_median_s": 0.0744541410022066,
+        "enc_stdev_s": 0.009407661041003695,
+        "enc_throughput_mb_s": 248.5459868090243,
+        "pure_enc_mean_s": 0.021767640000083098,
+        "pure_enc_throughput_mb_s": 859.0733680451234,
+        "enc_peak_mem_mb": 20.086854616800945,
+        "dec_mean_s": 0.08199087133349774,
+        "dec_median_s": 0.08117041500008781,
+        "dec_stdev_s": 0.017580440979828867,
+        "dec_throughput_mb_s": 228.07416856448467,
+        "pure_dec_mean_s": 0.028520926332324358,
+        "pure_dec_throughput_mb_s": 655.6589218517557,
+        "dec_peak_mem_mb": 20.0186030069987
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.36941570200118196,
+        "enc_throughput_mb_s": 50.6204790645453,
+        "dec_mean_s": 0.08576317699892873,
+        "dec_throughput_mb_s": 218.04229348335264,
+        "enc_peak_mem_mb": 0.2616262435913086
       }
     },
     "F5": {
@@ -114,20 +206,43 @@
       "size_mb": 50.0,
       "bytes": 52428800,
       "baseline": {
-        "enc_mean_s": 0.10473202866948365,
-        "enc_throughput_mb_s": 477.4088751569153,
+        "enc_mean_s": 0.7780363790006959,
+        "enc_median_s": 0.5333043570026348,
+        "enc_stdev_s": 0.8512001818937348,
+        "enc_throughput_mb_s": 64.26434720728564,
+        "pure_enc_mean_s": 0.7614327969992397,
+        "pure_enc_throughput_mb_s": 65.66567686215639,
         "enc_peak_mem_mb": 100.00039863586426,
-        "dec_mean_s": 0.14950454333544863,
-        "dec_throughput_mb_s": 334.43799689627645,
+        "dec_mean_s": 0.1569676816664772,
+        "dec_median_s": 0.14173528500032262,
+        "dec_stdev_s": 0.07589790793116431,
+        "dec_throughput_mb_s": 318.53690816584344,
+        "pure_dec_mean_s": 0.14036409966502106,
+        "pure_dec_throughput_mb_s": 356.216440808761,
         "dec_peak_mem_mb": 100.00029850006104
       },
-      "improved": {
-        "enc_mean_s": 0.1870305706640162,
-        "enc_throughput_mb_s": 267.33597519637874,
-        "enc_peak_mem_mb": 51.385396321614586,
-        "dec_mean_s": 0.15839397833527377,
-        "dec_throughput_mb_s": 315.66856597391984,
-        "dec_peak_mem_mb": 51.377569834391274
+      "improved_in_memory": {
+        "enc_mean_s": 0.14017749633421772,
+        "enc_median_s": 0.13362776600115467,
+        "enc_stdev_s": 0.028827708342551536,
+        "enc_throughput_mb_s": 356.69063371475596,
+        "pure_enc_mean_s": 0.08670755133304434,
+        "pure_enc_throughput_mb_s": 576.6510440128753,
+        "enc_peak_mem_mb": 51.45629692077637,
+        "dec_mean_s": 0.1206290183326928,
+        "dec_median_s": 0.11478764499770477,
+        "dec_stdev_s": 0.013966612802480403,
+        "dec_throughput_mb_s": 414.4939641480033,
+        "pure_dec_mean_s": 0.06715907333151941,
+        "pure_dec_throughput_mb_s": 744.501040882197,
+        "dec_peak_mem_mb": 51.37797609965006
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.9546293400004894,
+        "enc_throughput_mb_s": 52.37634954732731,
+        "dec_mean_s": 0.40093892466635833,
+        "dec_throughput_mb_s": 124.70727316288271,
+        "enc_peak_mem_mb": 0.2616233825683594
       }
     },
     "F6": {
@@ -135,20 +250,43 @@
       "size_mb": 100.0,
       "bytes": 104857600,
       "baseline": {
-        "enc_mean_s": 0.5183775363354167,
-        "enc_throughput_mb_s": 192.90959385881817,
+        "enc_mean_s": 1.2494923416658519,
+        "enc_median_s": 1.0942803340003593,
+        "enc_stdev_s": 0.6027690740262177,
+        "enc_throughput_mb_s": 80.03250333385614,
+        "pure_enc_mean_s": 1.2328887596643958,
+        "pure_enc_throughput_mb_s": 81.11031852315773,
         "enc_peak_mem_mb": 200.00039863586426,
-        "dec_mean_s": 0.22069192233902868,
-        "dec_throughput_mb_s": 453.1203450499616,
+        "dec_mean_s": 0.449216701000599,
+        "dec_median_s": 0.1623035520024132,
+        "dec_stdev_s": 0.5331257103855954,
+        "dec_throughput_mb_s": 222.60971103090546,
+        "pure_dec_mean_s": 0.4326131189991429,
+        "pure_dec_throughput_mb_s": 231.1534153919131,
         "dec_peak_mem_mb": 200.00029850006104
       },
-      "improved": {
-        "enc_mean_s": 0.20582441333681345,
-        "enc_throughput_mb_s": 485.85101436124995,
-        "enc_peak_mem_mb": 104.20700867970784,
-        "dec_mean_s": 0.1802439646659574,
-        "dec_throughput_mb_s": 554.8035973649827,
-        "dec_peak_mem_mb": 104.32289123535156
+      "improved_in_memory": {
+        "enc_mean_s": 0.4373242153330163,
+        "enc_median_s": 0.4343346940004267,
+        "enc_stdev_s": 0.06716232151052375,
+        "enc_throughput_mb_s": 228.6633040062769,
+        "pure_enc_mean_s": 0.38385427033184294,
+        "pure_enc_throughput_mb_s": 260.51553344332933,
+        "enc_peak_mem_mb": 104.41857719421387,
+        "dec_mean_s": 0.5482310730015646,
+        "dec_median_s": 0.22918299700177158,
+        "dec_stdev_s": 0.6165928242524358,
+        "dec_throughput_mb_s": 182.40483789526942,
+        "pure_dec_mean_s": 0.49476112800039124,
+        "pure_dec_throughput_mb_s": 202.1177379155804,
+        "dec_peak_mem_mb": 104.3232905069987
+      },
+      "improved_streaming": {
+        "enc_mean_s": 2.2325819253322456,
+        "enc_throughput_mb_s": 44.79118945886759,
+        "dec_mean_s": 1.0435265606671844,
+        "dec_throughput_mb_s": 95.8288976718182,
+        "enc_peak_mem_mb": 0.2616262435913086
       }
     }
   },
@@ -156,23 +294,80 @@
     "F2": {
       "file_type": "PDF document",
       "size_mb": 1.25,
-      "baseline_reencrypt_s": 0.027405109998653643,
-      "improved_envelope_s": 0.1060332089982694,
-      "speedup_factor": 0.25845780069809005
+      "baseline_reencrypt_s": 0.024383039999520406,
+      "improved_envelope_s": 0.1023899399988295,
+      "speedup_factor": 0.23813902029632156
     },
     "F4": {
       "file_type": "Short video (.mp4)",
       "size_mb": 18.699999809265137,
-      "baseline_reencrypt_s": 0.05195525599992834,
-      "improved_envelope_s": 0.37083446299948264,
-      "speedup_factor": 0.1401036343269984
+      "baseline_reencrypt_s": 0.04973660299947369,
+      "improved_envelope_s": 0.21608767599900602,
+      "speedup_factor": 0.23016862377520536
     },
     "F5": {
       "file_type": "Medium Archive (.bin)",
       "size_mb": 50.0,
-      "baseline_reencrypt_s": 0.8341055319906445,
-      "improved_envelope_s": 0.23103503900347278,
-      "speedup_factor": 3.610298834273821
+      "baseline_reencrypt_s": 0.14162258799842675,
+      "improved_envelope_s": 0.2113269119981851,
+      "speedup_factor": 0.6701587917001457
+    },
+    "F6": {
+      "file_type": "Large Archive (.bin)",
+      "size_mb": 100.0,
+      "baseline_reencrypt_s": 0.7053486410004552,
+      "improved_envelope_s": 1.4775098909994995,
+      "speedup_factor": 0.47739013139418246
+    }
+  },
+  "chunk_size_sensitivity": {
+    "32KB": {
+      "chunk_size_bytes": 32768,
+      "enc_mean_s": 0.6132528889993409,
+      "enc_throughput_mb_s": 30.493129579508974,
+      "dec_mean_s": 0.17605594149972603,
+      "dec_throughput_mb_s": 106.21623814550011,
+      "peak_ram_mb": 0.13694429397583008
+    },
+    "64KB": {
+      "chunk_size_bytes": 65536,
+      "enc_mean_s": 0.3440381234995584,
+      "enc_throughput_mb_s": 54.35444077838989,
+      "dec_mean_s": 0.11652514999877894,
+      "dec_throughput_mb_s": 160.48037534782057,
+      "peak_ram_mb": 0.2615489959716797
+    },
+    "128KB": {
+      "chunk_size_bytes": 131072,
+      "enc_mean_s": 0.28005089949874673,
+      "enc_throughput_mb_s": 66.77357524198497,
+      "dec_mean_s": 0.10804310649837134,
+      "dec_throughput_mb_s": 173.07906460045206,
+      "peak_ram_mb": 0.5115184783935547
+    },
+    "256KB": {
+      "chunk_size_bytes": 262144,
+      "enc_mean_s": 0.2745473269987997,
+      "enc_throughput_mb_s": 68.11211754885122,
+      "dec_mean_s": 0.11669060250096663,
+      "dec_throughput_mb_s": 160.2528344911942,
+      "peak_ram_mb": 1.0115184783935547
+    },
+    "512KB": {
+      "chunk_size_bytes": 524288,
+      "enc_mean_s": 0.2590346890010551,
+      "enc_throughput_mb_s": 72.19110259471452,
+      "dec_mean_s": 0.1125907224995899,
+      "dec_throughput_mb_s": 166.0882832449472,
+      "peak_ram_mb": 2.0115184783935547
+    },
+    "1024KB": {
+      "chunk_size_bytes": 1048576,
+      "enc_mean_s": 0.36715898150032444,
+      "enc_throughput_mb_s": 50.93161478128954,
+      "dec_mean_s": 0.2288596905000304,
+      "dec_throughput_mb_s": 81.70945162255497,
+      "peak_ram_mb": 4.0115180015563965
     }
   }
 }

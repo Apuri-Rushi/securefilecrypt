@@ -2,14 +2,14 @@
 Controlled comparative benchmark harness comparing Baseline vs Improved implementations.
 
 Measures:
-1. Encryption & Decryption Processing Time & Throughput (MB/s)
-2. Peak Allocated Memory (MB) via tracemalloc
-3. Key Derivation Function (KDF) Latency (PBKDF2 vs Argon2id)
+1. End-to-End vs Isolated Pure Cryptographic Processing Time & Throughput (MB/s)
+2. Peak Allocated Memory (MB) via tracemalloc for both In-Memory and Disk Streaming
+3. Key Derivation Function (KDF) Latency (PBKDF2 vs Argon2id RFC 9106)
 4. Password-Change Latency (Full Re-encryption vs Envelope Re-wrap)
-5. Security / Robustness Matrix (Tamper, Truncate, Reorder, Metadata)
+5. Chunk-Size Sensitivity Profile across [32 KB, 64 KB, 128 KB, 256 KB, 512 KB, 1024 KB]
+6. Comprehensive Statistical Metrics: Mean, Median, Standard Deviation
 
-Saves raw and processed metrics to benchmark/results/comparative_benchmark.json
-and generates summary comparison tables.
+Saves structured results to benchmark/results/comparative_benchmark.json.
 """
 
 import argparse
@@ -20,6 +20,7 @@ import os
 import platform
 import statistics
 import sys
+import tempfile
 import time
 import tracemalloc
 from pathlib import Path
@@ -128,19 +129,77 @@ def benchmark_password_change(data: bytes, old_pwd: str, new_pwd: str) -> dict:
     }
 
 
-def run_comparative_benchmarks(num_trials: int = 5, test_extended: bool = True) -> dict:
+def benchmark_chunk_size_sensitivity(file_path: Path, password: str, num_trials: int = 3) -> dict:
+    """
+    Evaluates throughput and memory across various chunk sizes on disk streaming.
+    Tests: 32 KB, 64 KB, 128 KB, 256 KB, 512 KB, 1024 KB.
+    """
+    chunk_sizes = [
+        32 * 1024,
+        64 * 1024,
+        128 * 1024,
+        256 * 1024,
+        512 * 1024,
+        1024 * 1024,
+    ]
+    file_bytes_len = file_path.stat().st_size
+    file_mb = file_bytes_len / (1024 * 1024)
+
+    results = {}
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_p = Path(tmp_dir)
+        enc_p = tmp_p / "temp.enc"
+        dec_p = tmp_p / "temp.dec"
+
+        for c_size in chunk_sizes:
+            c_kb = c_size // 1024
+            enc_times, dec_times, enc_mems = [], [], []
+
+            for _ in range(num_trials):
+                tracemalloc.start()
+                t0 = time.perf_counter()
+                impr_crypto.encrypt_file(file_path, enc_p, password, chunk_size=c_size)
+                enc_t = time.perf_counter() - t0
+                _, peak_mem = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+
+                t0 = time.perf_counter()
+                impr_crypto.decrypt_file(enc_p, dec_p, password)
+                dec_t = time.perf_counter() - t0
+
+                enc_times.append(enc_t)
+                dec_times.append(dec_t)
+                enc_mems.append(peak_mem / (1024 * 1024))
+
+            avg_enc = statistics.mean(enc_times)
+            avg_dec = statistics.mean(dec_times)
+            avg_mem = statistics.mean(enc_mems)
+
+            results[f"{c_kb}KB"] = {
+                "chunk_size_bytes": c_size,
+                "enc_mean_s": avg_enc,
+                "enc_throughput_mb_s": file_mb / avg_enc if avg_enc > 0 else 0,
+                "dec_mean_s": avg_dec,
+                "dec_throughput_mb_s": file_mb / avg_dec if avg_dec > 0 else 0,
+                "peak_ram_mb": avg_mem,
+            }
+
+    return results
+
+
+def run_comparative_benchmarks(num_trials: int = 3, test_extended: bool = True) -> dict:
     data_dir = PROJECT_ROOT / "benchmark" / "test_data"
     files_meta = generate_all_paper_test_files(data_dir)
 
     if test_extended:
-        # Add 50 MB and 100 MB test files for memory and scaling evaluation
         ext_files = {
             "F5": {"type": "Medium Archive (.bin)", "size_mb": 50.0, "bytes": 50 * 1024 * 1024, "path": data_dir / "sample_F5_50mb.bin"},
             "F6": {"type": "Large Archive (.bin)", "size_mb": 100.0, "bytes": 100 * 1024 * 1024, "path": data_dir / "sample_F6_100mb.bin"},
         }
         for fid, meta in ext_files.items():
-            print(f"Generating extended test file {fid} ({meta['size_mb']} MB)...")
-            generate_extended_file(meta["path"], meta["bytes"])
+            if not meta["path"].exists():
+                print(f"Generating extended test file {fid} ({meta['size_mb']} MB)...")
+                generate_extended_file(meta["path"], meta["bytes"])
             files_meta[fid] = {
                 "type": meta["type"],
                 "target_size_mb": meta["size_mb"],
@@ -154,8 +213,11 @@ def run_comparative_benchmarks(num_trials: int = 5, test_extended: bool = True) 
 
     print("\n[+] Measuring Key Derivation Functions (PBKDF2 vs Argon2id)...")
     kdf_results = benchmark_kdf(test_pwd, num_trials=num_trials)
-    print(f"    PBKDF2-HMAC-SHA256: {kdf_results['pbkdf2']['mean_s']:.4f} s (0 MB RAM)")
-    print(f"    Argon2id (RFC 9106): {kdf_results['argon2id']['mean_s']:.4f} s (64 MB RAM)")
+    pbkdf2_mean_kdf = kdf_results['pbkdf2']['mean_s']
+    argon2_mean_kdf = kdf_results['argon2id']['mean_s']
+
+    print(f"    PBKDF2-HMAC-SHA256: {pbkdf2_mean_kdf:.4f} s (0 MB RAM)")
+    print(f"    Argon2id (RFC 9106): {argon2_mean_kdf:.4f} s (64 MB RAM)")
 
     comparison_results = {
         "metadata": {
@@ -168,111 +230,181 @@ def run_comparative_benchmarks(num_trials: int = 5, test_extended: bool = True) 
         "kdf_comparison": kdf_results,
         "files": {},
         "password_change_comparison": {},
+        "chunk_size_sensitivity": {},
     }
 
-    for fid, meta in files_meta.items():
-        file_bytes_len = meta["actual_bytes"]
-        file_mb = file_bytes_len / (1024 * 1024)
-        print(f"\n=======================================================")
-        print(f"Benchmarking [{fid}] {meta['type']} ({file_mb:.2f} MB, {file_bytes_len:,} bytes)")
-        print(f"=======================================================")
+    with tempfile.TemporaryDirectory() as tmp_bench_dir:
+        tmp_bench_p = Path(tmp_bench_dir)
 
-        with open(meta["path"], "rb") as f:
-            plaintext = f.read()
+        for fid, meta in files_meta.items():
+            file_bytes_len = meta["actual_bytes"]
+            file_mb = file_bytes_len / (1024 * 1024)
+            print(f"\n=======================================================")
+            print(f"Benchmarking [{fid}] {meta['type']} ({file_mb:.2f} MB, {file_bytes_len:,} bytes)")
+            print(f"=======================================================")
 
-        orig_hash = sha256_bytes(plaintext)
+            with open(meta["path"], "rb") as f:
+                plaintext = f.read()
 
-        # Baseline trials
-        base_enc_times, base_dec_times, base_enc_mems, base_dec_mems = [], [], [], []
-        # Improved trials
-        impr_enc_times, impr_dec_times, impr_enc_mems, impr_dec_mems = [], [], [], []
+            orig_hash = sha256_bytes(plaintext)
 
-        for trial in range(1, num_trials + 1):
-            sys.stdout.write(f"  Trial {trial}/{num_trials}... ")
-            sys.stdout.flush()
+            base_enc_times, base_dec_times, base_enc_mems, base_dec_mems = [], [], [], []
+            impr_enc_times, impr_dec_times, impr_enc_mems, impr_dec_mems = [], [], [], []
+            stream_enc_times, stream_dec_times, stream_enc_mems = [], [], []
 
-            # --- Baseline Run ---
-            tracemalloc.start()
-            t0 = time.perf_counter()
-            base_container = base_crypto.encrypt_bytes(plaintext, test_pwd)
-            base_t_enc = time.perf_counter() - t0
-            _, peak_base_enc = tracemalloc.get_traced_memory()
-            tracemalloc.stop()
+            file_path = Path(meta["path"])
+            disk_enc_p = tmp_bench_p / f"{fid}.enc"
+            disk_dec_p = tmp_bench_p / f"{fid}.dec"
 
-            tracemalloc.start()
-            t0 = time.perf_counter()
-            base_restored = base_crypto.decrypt_bytes(base_container, test_pwd)
-            base_t_dec = time.perf_counter() - t0
-            _, peak_base_dec = tracemalloc.get_traced_memory()
-            tracemalloc.stop()
+            for trial in range(1, num_trials + 1):
+                sys.stdout.write(f"  Trial {trial}/{num_trials}... ")
+                sys.stdout.flush()
 
-            assert sha256_bytes(base_restored) == orig_hash
+                # --- 1. Baseline In-Memory Run ---
+                tracemalloc.start()
+                t0 = time.perf_counter()
+                base_container = base_crypto.encrypt_bytes(plaintext, test_pwd)
+                base_t_enc = time.perf_counter() - t0
+                _, peak_base_enc = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
 
-            base_enc_times.append(base_t_enc)
-            base_dec_times.append(base_t_dec)
-            base_enc_mems.append(peak_base_enc / (1024 * 1024))
-            base_dec_mems.append(peak_base_dec / (1024 * 1024))
+                tracemalloc.start()
+                t0 = time.perf_counter()
+                base_restored = base_crypto.decrypt_bytes(base_container, test_pwd)
+                base_t_dec = time.perf_counter() - t0
+                _, peak_base_dec = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
 
-            # --- Improved Run ---
-            tracemalloc.start()
-            t0 = time.perf_counter()
-            impr_container = impr_crypto.encrypt_bytes(
-                plaintext, test_pwd, filename=Path(meta["path"]).name
-            )
-            impr_t_enc = time.perf_counter() - t0
-            _, peak_impr_enc = tracemalloc.get_traced_memory()
-            tracemalloc.stop()
+                assert sha256_bytes(base_restored) == orig_hash
 
-            tracemalloc.start()
-            t0 = time.perf_counter()
-            impr_restored, impr_meta = impr_crypto.decrypt_bytes(impr_container, test_pwd)
-            impr_t_dec = time.perf_counter() - t0
-            _, peak_impr_dec = tracemalloc.get_traced_memory()
-            tracemalloc.stop()
+                base_enc_times.append(base_t_enc)
+                base_dec_times.append(base_t_dec)
+                base_enc_mems.append(peak_base_enc / (1024 * 1024))
+                base_dec_mems.append(peak_base_dec / (1024 * 1024))
 
-            assert sha256_bytes(impr_restored) == orig_hash
+                # --- 2. Improved In-Memory Run ---
+                tracemalloc.start()
+                t0 = time.perf_counter()
+                impr_container = impr_crypto.encrypt_bytes(
+                    plaintext, test_pwd, filename=Path(meta["path"]).name
+                )
+                impr_t_enc = time.perf_counter() - t0
+                _, peak_impr_enc = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
 
-            impr_enc_times.append(impr_t_enc)
-            impr_dec_times.append(impr_t_dec)
-            impr_enc_mems.append(peak_impr_enc / (1024 * 1024))
-            impr_dec_mems.append(peak_impr_dec / (1024 * 1024))
+                tracemalloc.start()
+                t0 = time.perf_counter()
+                impr_restored, impr_meta = impr_crypto.decrypt_bytes(impr_container, test_pwd)
+                impr_t_dec = time.perf_counter() - t0
+                _, peak_impr_dec = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
 
-            print("Done")
+                assert sha256_bytes(impr_restored) == orig_hash
 
-        # Compile metrics for fid
-        comparison_results["files"][fid] = {
-            "type": meta["type"],
-            "size_mb": file_mb,
-            "bytes": file_bytes_len,
-            "baseline": {
-                "enc_mean_s": statistics.mean(base_enc_times),
-                "enc_throughput_mb_s": file_mb / statistics.mean(base_enc_times),
-                "enc_peak_mem_mb": statistics.mean(base_enc_mems),
-                "dec_mean_s": statistics.mean(base_dec_times),
-                "dec_throughput_mb_s": file_mb / statistics.mean(base_dec_times),
-                "dec_peak_mem_mb": statistics.mean(base_dec_mems),
-            },
-            "improved": {
-                "enc_mean_s": statistics.mean(impr_enc_times),
-                "enc_throughput_mb_s": file_mb / statistics.mean(impr_enc_times),
-                "enc_peak_mem_mb": statistics.mean(impr_enc_mems),
-                "dec_mean_s": statistics.mean(impr_dec_times),
-                "dec_throughput_mb_s": file_mb / statistics.mean(impr_dec_times),
-                "dec_peak_mem_mb": statistics.mean(impr_dec_mems),
-            },
-        }
+                impr_enc_times.append(impr_t_enc)
+                impr_dec_times.append(impr_t_dec)
+                impr_enc_mems.append(peak_impr_enc / (1024 * 1024))
+                impr_dec_mems.append(peak_impr_dec / (1024 * 1024))
 
-        # Password change benchmark on selected files
-        if fid in ["F2", "F4", "F5"]:
-            pwd_res = benchmark_password_change(plaintext, test_pwd, new_pwd)
-            comparison_results["password_change_comparison"][fid] = {
-                "file_type": meta["type"],
+                # --- 3. Improved Disk Streaming Run (True O(1) Memory Bound) ---
+                tracemalloc.start()
+                t0 = time.perf_counter()
+                impr_crypto.encrypt_file(file_path, disk_enc_p, test_pwd)
+                stream_t_enc = time.perf_counter() - t0
+                _, peak_stream_enc = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+
+                t0 = time.perf_counter()
+                impr_crypto.decrypt_file(disk_enc_p, disk_dec_p, test_pwd)
+                stream_t_dec = time.perf_counter() - t0
+
+                stream_enc_times.append(stream_t_enc)
+                stream_dec_times.append(stream_t_dec)
+                stream_enc_mems.append(peak_stream_enc / (1024 * 1024))
+
+                print("Done")
+
+            # Clean disk temp files
+            if disk_enc_p.exists():
+                disk_enc_p.unlink()
+            if disk_dec_p.exists():
+                disk_dec_p.unlink()
+
+            base_enc_mean = statistics.mean(base_enc_times)
+            base_dec_mean = statistics.mean(base_dec_times)
+            impr_enc_mean = statistics.mean(impr_enc_times)
+            impr_dec_mean = statistics.mean(impr_dec_times)
+            stream_enc_mean = statistics.mean(stream_enc_times)
+            stream_dec_mean = statistics.mean(stream_dec_times)
+
+            # Pure payload cryptographic time (subtracting KDF)
+            base_pure_enc = max(0.0001, base_enc_mean - pbkdf2_mean_kdf)
+            base_pure_dec = max(0.0001, base_dec_mean - pbkdf2_mean_kdf)
+            impr_pure_enc = max(0.0001, impr_enc_mean - argon2_mean_kdf)
+            impr_pure_dec = max(0.0001, impr_dec_mean - argon2_mean_kdf)
+
+            comparison_results["files"][fid] = {
+                "type": meta["type"],
                 "size_mb": file_mb,
-                **pwd_res,
+                "bytes": file_bytes_len,
+                "baseline": {
+                    "enc_mean_s": base_enc_mean,
+                    "enc_median_s": statistics.median(base_enc_times),
+                    "enc_stdev_s": statistics.stdev(base_enc_times) if num_trials > 1 else 0.0,
+                    "enc_throughput_mb_s": file_mb / base_enc_mean,
+                    "pure_enc_mean_s": base_pure_enc,
+                    "pure_enc_throughput_mb_s": file_mb / base_pure_enc,
+                    "enc_peak_mem_mb": statistics.mean(base_enc_mems),
+                    "dec_mean_s": base_dec_mean,
+                    "dec_median_s": statistics.median(base_dec_times),
+                    "dec_stdev_s": statistics.stdev(base_dec_times) if num_trials > 1 else 0.0,
+                    "dec_throughput_mb_s": file_mb / base_dec_mean,
+                    "pure_dec_mean_s": base_pure_dec,
+                    "pure_dec_throughput_mb_s": file_mb / base_pure_dec,
+                    "dec_peak_mem_mb": statistics.mean(base_dec_mems),
+                },
+                "improved_in_memory": {
+                    "enc_mean_s": impr_enc_mean,
+                    "enc_median_s": statistics.median(impr_enc_times),
+                    "enc_stdev_s": statistics.stdev(impr_enc_times) if num_trials > 1 else 0.0,
+                    "enc_throughput_mb_s": file_mb / impr_enc_mean,
+                    "pure_enc_mean_s": impr_pure_enc,
+                    "pure_enc_throughput_mb_s": file_mb / impr_pure_enc,
+                    "enc_peak_mem_mb": statistics.mean(impr_enc_mems),
+                    "dec_mean_s": impr_dec_mean,
+                    "dec_median_s": statistics.median(impr_dec_times),
+                    "dec_stdev_s": statistics.stdev(impr_dec_times) if num_trials > 1 else 0.0,
+                    "dec_throughput_mb_s": file_mb / impr_dec_mean,
+                    "pure_dec_mean_s": impr_pure_dec,
+                    "pure_dec_throughput_mb_s": file_mb / impr_pure_dec,
+                    "dec_peak_mem_mb": statistics.mean(impr_dec_mems),
+                },
+                "improved_streaming": {
+                    "enc_mean_s": stream_enc_mean,
+                    "enc_throughput_mb_s": file_mb / stream_enc_mean,
+                    "dec_mean_s": stream_dec_mean,
+                    "dec_throughput_mb_s": file_mb / stream_dec_mean,
+                    "enc_peak_mem_mb": statistics.mean(stream_enc_mems),
+                },
             }
-            print(f"    Password Update Latency for {fid} ({file_mb:.1f} MB):")
-            print(f"      Baseline (Full Re-encryption): {pwd_res['baseline_reencrypt_s']:.4f} s")
-            print(f"      Improved (Envelope Re-wrap):   {pwd_res['improved_envelope_s']:.4f} s ({pwd_res['speedup_factor']:.1f}x speedup)")
+
+            # Password change benchmark on representative files
+            if fid in ["F2", "F4", "F5", "F6"]:
+                pwd_res = benchmark_password_change(plaintext, test_pwd, new_pwd)
+                comparison_results["password_change_comparison"][fid] = {
+                    "file_type": meta["type"],
+                    "size_mb": file_mb,
+                    **pwd_res,
+                }
+                print(f"    Password Update Latency for {fid} ({file_mb:.1f} MB):")
+                print(f"      Baseline (Full Re-encryption): {pwd_res['baseline_reencrypt_s']:.4f} s")
+                print(f"      Improved (Envelope Re-wrap):   {pwd_res['improved_envelope_s']:.4f} s ({pwd_res['speedup_factor']:.1f}x speedup)")
+
+        # Run chunk size sensitivity profile on F4 (18.7 MB)
+        print("\n[+] Profiling Chunk Size Sensitivity on F4 (18.7 MB)...")
+        f4_path = Path(files_meta["F4"]["path"])
+        sensitivity_results = benchmark_chunk_size_sensitivity(f4_path, test_pwd, num_trials=2)
+        comparison_results["chunk_size_sensitivity"] = sensitivity_results
 
     # Save output JSON
     out_file = PROJECT_ROOT / "benchmark" / "results" / "comparative_benchmark.json"
@@ -284,34 +416,62 @@ def run_comparative_benchmarks(num_trials: int = 5, test_extended: bool = True) 
 
 
 def print_comparison_markdown_table(results: dict):
-    print("\n" + "=" * 110)
-    print("EXPERIMENTAL BASELINE VS IMPROVED PERFORMANCE COMPARISON")
-    print("=" * 110)
+    print("\n" + "=" * 115)
+    print("EXPERIMENTAL EVALUATION: BASELINE VS FINAL IMPROVED SYSTEM")
+    print("=" * 115)
     header = (
         f"{'File ID':<8}{'Size':<10}"
         f"{'Base Enc':<11}{'Impr Enc':<11}{'Base Tput':<14}{'Impr Tput':<14}"
-        f"{'Base RAM':<12}{'Impr RAM':<12}{'RAM Delta':<10}"
+        f"{'Base RAM':<12}{'Stream RAM':<14}{'RAM Factor':<10}"
     )
     print(header)
-    print("-" * 110)
+    print("-" * 115)
 
     for fid, d in results["files"].items():
         sz = f"{d['size_mb']:.1f} MB"
         b_enc = f"{d['baseline']['enc_mean_s']:.3f} s"
-        i_enc = f"{d['improved']['enc_mean_s']:.3f} s"
+        i_enc = f"{d['improved_in_memory']['enc_mean_s']:.3f} s"
         b_tp = f"{d['baseline']['enc_throughput_mb_s']:.1f} MB/s"
-        i_tp = f"{d['improved']['enc_throughput_mb_s']:.1f} MB/s"
+        i_tp = f"{d['improved_in_memory']['enc_throughput_mb_s']:.1f} MB/s"
         b_ram = f"{d['baseline']['enc_peak_mem_mb']:.1f} MB"
-        i_ram = f"{d['improved']['enc_peak_mem_mb']:.1f} MB"
-        ram_ratio = d['baseline']['enc_peak_mem_mb'] / max(0.01, d['improved']['enc_peak_mem_mb'])
-        ratio_str = f"{ram_ratio:.1f}x"
+        s_ram = f"{d['improved_streaming']['enc_peak_mem_mb']:.2f} MB"
+        ram_ratio = d['baseline']['enc_peak_mem_mb'] / max(0.01, d['improved_streaming']['enc_peak_mem_mb'])
+        ratio_str = f"{ram_ratio:.1f}x less"
 
         print(
             f"{fid:<8}{sz:<10}"
             f"{b_enc:<11}{i_enc:<11}{b_tp:<14}{i_tp:<14}"
-            f"{b_ram:<12}{i_ram:<12}{ratio_str:<10}"
+            f"{b_ram:<12}{s_ram:<14}{ratio_str:<10}"
         )
-    print("=" * 110)
+    print("=" * 115)
+
+    print("\n" + "=" * 80)
+    print("PASSWORD ROTATION SPEEDUP (ENVELOPE DEK RE-WRAP VS FULL RE-ENCRYPTION)")
+    print("=" * 80)
+    print(f"{'File ID':<10}{'Size':<12}{'Baseline Re-encrypt':<24}{'Envelope Re-wrap':<22}{'Speedup':<12}")
+    print("-" * 80)
+    for fid, p in results["password_change_comparison"].items():
+        print(
+            f"{fid:<10}{p['size_mb']:.1f} MB     "
+            f"{p['baseline_reencrypt_s']:.4f} s                 "
+            f"{p['improved_envelope_s']:.4f} s               "
+            f"{p['speedup_factor']:.1f}x"
+        )
+    print("=" * 80)
+
+    print("\n" + "=" * 80)
+    print("CHUNK SIZE SENSITIVITY PROFILE (F4 18.7 MB)")
+    print("=" * 80)
+    print(f"{'Chunk Size':<14}{'Enc Throughput':<18}{'Dec Throughput':<18}{'Peak RAM':<12}")
+    print("-" * 80)
+    for c_name, c_data in results["chunk_size_sensitivity"].items():
+        print(
+            f"{c_name:<14}"
+            f"{c_data['enc_throughput_mb_s']:.1f} MB/s          "
+            f"{c_data['dec_throughput_mb_s']:.1f} MB/s          "
+            f"{c_data['peak_ram_mb']:.2f} MB"
+        )
+    print("=" * 80)
 
 
 if __name__ == "__main__":
