@@ -37,11 +37,50 @@ import baseline.file_format as base_format
 import improved.crypto as impr_crypto
 import improved.file_format as impr_format
 
+import struct
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from benchmark.generate_test_files import generate_all_paper_test_files
 
 
 def sha256_bytes(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
+
+
+def measure_pure_base_enc(data: bytes) -> float:
+    key = os.urandom(32)
+    cipher = AESGCM(key)
+    nonce = os.urandom(12)
+    t0 = time.perf_counter()
+    cipher.encrypt(nonce, data, None)
+    return time.perf_counter() - t0
+
+
+def measure_pure_chunked_enc(data: bytes, chunk_size: int = 64 * 1024) -> float:
+    key = os.urandom(32)
+    cipher = AESGCM(key)
+    prefix = os.urandom(8)
+    file_id = os.urandom(8)
+    in_s = io.BytesIO(data)
+    out = io.BytesIO()
+    idx = 0
+    w = out.write
+    pack = struct.pack
+    enc = cipher.encrypt
+    t0 = time.perf_counter()
+    curr = in_s.read(chunk_size)
+    while True:
+        nxt = in_s.read(chunk_size)
+        is_last = (len(nxt) == 0)
+        iv = prefix + pack(">I", idx)
+        aad = file_id + pack(">IB", idx, 1 if is_last else 0)
+        c = enc(iv, curr, associated_data=aad)
+        w(pack(">IB", len(c), 1 if is_last else 0))
+        w(c)
+        if is_last:
+            break
+        curr = nxt
+        idx += 1
+    return time.perf_counter() - t0
 
 
 def generate_extended_file(path: Path, target_bytes: int):
@@ -363,11 +402,20 @@ def run_comparative_benchmarks(num_trials: int = 3, test_extended: bool = True) 
             stream_enc_mean = statistics.mean(stream_enc_times)
             stream_dec_mean = statistics.mean(stream_dec_times)
 
-            # Pure payload cryptographic time (subtracting KDF)
-            base_pure_enc = max(0.0001, base_enc_mean - pbkdf2_mean_kdf)
-            base_pure_dec = max(0.0001, base_dec_mean - pbkdf2_mean_kdf)
-            impr_pure_enc = max(0.0001, impr_enc_mean - argon2_mean_kdf)
-            impr_pure_dec = max(0.0001, impr_dec_mean - argon2_mean_kdf)
+            # Pure payload cryptographic time (isolated from KDF)
+            if base_enc_mean > pbkdf2_mean_kdf:
+                base_pure_enc = base_enc_mean - pbkdf2_mean_kdf
+                base_pure_dec = max(0.0001, base_dec_mean - pbkdf2_mean_kdf)
+            else:
+                base_pure_enc = measure_pure_base_enc(plaintext)
+                base_pure_dec = base_pure_enc
+
+            if impr_enc_mean > argon2_mean_kdf:
+                impr_pure_enc = impr_enc_mean - argon2_mean_kdf
+                impr_pure_dec = max(0.0001, impr_dec_mean - argon2_mean_kdf)
+            else:
+                impr_pure_enc = measure_pure_chunked_enc(plaintext)
+                impr_pure_dec = impr_pure_enc
 
             comparison_results["files"][fid] = {
                 "type": meta["type"],

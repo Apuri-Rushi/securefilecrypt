@@ -65,14 +65,14 @@ All values verified against `benchmark/results/comparative_benchmark.json` and `
 
 | File ID | Size (MB) | Metric | Baseline Measured | Improved Measured | Measured Ratio / Speedup | Source File in Repo |
 | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
-| **F1** | 0.10 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0502 s<br>1.99 MB/s<br>0.20 MB | 0.0497 s<br>2.01 MB/s<br>0.23 MB | 1.01x Enc Time<br>1.01x Throughput<br>0.88x RAM | `comparative_benchmark.json:28–48` |
-| **F2** | 1.25 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0142 s<br>88.02 MB/s<br>2.50 MB | 0.0533 s<br>23.46 MB/s<br>1.53 MB | 0.27x Enc Time<br>0.27x Throughput<br>**1.63x RAM Reduction** | `comparative_benchmark.json:49–69` |
-| **F3** | 5.40 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0206 s<br>262.48 MB/s<br>10.80 MB | 0.0540 s<br>100.05 MB/s<br>6.09 MB | 0.38x Enc Time<br>0.38x Throughput<br>**1.77x RAM Reduction** | `comparative_benchmark.json:70–90` |
-| **F4** | 18.70 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.1625 s<br>115.10 MB/s<br>37.40 MB | 0.1440 s<br>129.87 MB/s<br>20.02 MB | **1.13x Speedup**<br>**1.13x Throughput**<br>**1.87x RAM Reduction** | `comparative_benchmark.json:91–111` |
-| **F5** | 50.00 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.1047 s<br>477.41 MB/s<br>100.00 MB | 0.1870 s<br>267.34 MB/s<br>51.39 MB | 0.56x Enc Time<br>0.56x Throughput<br>**1.95x RAM Reduction** | `comparative_benchmark.json:112–132` |
-| **F6** | 100.00 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.5184 s<br>192.91 MB/s<br>200.00 MB | **0.2058 s**<br>**485.85 MB/s**<br>**104.21 MB** | **2.52x Faster**<br>**2.52x Throughput**<br>**1.92x RAM Reduction** | `comparative_benchmark.json:133–153` |
-| **KDF** | N/A | Mean Latency<br>Memory Cost | 52.8 ms (PBKDF2)<br>0 MB ($<1\text{ KB}$) | 46.9 ms (Argon2id)<br>**64 MB RAM** | Comparable Desktop UI Latency<br>**Massive Memory Hardness** | `comparative_benchmark.json:9–26` |
-| **Rotation** | 1.25 MB (F2)<br>18.7 MB (F4)<br>50.0 MB (F5) | Password Update Time | 0.0274 s<br>0.0520 s<br>0.8341 s | 0.1060 s<br>0.3708 s<br>**0.2310 s** | 0.26x (KDF dominates)<br>0.14x<br>**3.61x Faster (O(1) at scale)** | `comparative_benchmark.json:155–177` |
+| **F1** | 0.10 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0319 s<br>3.14 MB/s<br>0.20 MB | 0.0721 s<br>1.39 MB/s<br>0.42 MB | 0.44x Enc Time<br>0.44x Throughput<br>0.48x RAM | `comparative_benchmark.json:28–71` |
+| **F2** | 1.25 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0256 s<br>48.88 MB/s<br>2.50 MB | 0.0620 s<br>20.18 MB/s<br>0.50 MB | 0.41x Enc Time<br>0.41x Throughput<br>**5.00x RAM Reduction** | `comparative_benchmark.json:72–115` |
+| **F3** | 5.40 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0433 s<br>124.65 MB/s<br>10.80 MB | 0.1798 s<br>30.03 MB/s<br>0.50 MB | 0.24x Enc Time<br>0.24x Throughput<br>**21.60x RAM Reduction** | `comparative_benchmark.json:116–159` |
+| **F4** | 18.70 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.0756 s<br>247.35 MB/s<br>37.40 MB | 0.2946 s<br>63.48 MB/s<br>0.50 MB | 0.26x Enc Time<br>0.26x Throughput<br>**74.80x RAM Reduction** | `comparative_benchmark.json:160–203` |
+| **F5** | 50.00 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.1640 s<br>304.96 MB/s<br>100.00 MB | 0.4488 s<br>111.40 MB/s<br>0.50 MB | 0.37x Enc Time<br>0.37x Throughput<br>**200.00x RAM Reduction** | `comparative_benchmark.json:204–247` |
+| **F6** | 100.00 MB | Encryption Time<br>Throughput<br>Peak Heap RAM | 0.2565 s<br>389.86 MB/s<br>200.00 MB | 0.9073 s<br>110.22 MB/s<br>**0.50 MB** | 0.28x Enc Time (Disk vs RAM)<br>0.28x Throughput<br>**400.00x RAM Reduction** | `comparative_benchmark.json:248–291` |
+| **KDF** | N/A | Mean Latency<br>Memory Cost | 18.7 ms (PBKDF2)<br>0 MB ($<1\text{ KB}$) | 109.6 ms (Argon2id)<br>**64 MB RAM** | Standard Desktop Derivation Latency<br>**Massive Memory Hardness** | `comparative_benchmark.json:9–26` |
+| **Rotation** | 1.25 MB (F2)<br>18.7 MB (F4)<br>100.0 MB (F6) | Password Update Time | 0.0521 s<br>0.1174 s<br>2.0043 s | 0.3005 s<br>0.2872 s<br>**0.3571 s** | 0.17x (KDF dominates)<br>0.41x<br>**5.61x Faster (O(1) at scale)** | `comparative_benchmark.json:293–338` |
 
 ---
 
