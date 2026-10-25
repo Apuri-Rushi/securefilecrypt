@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="100%" height="100%" style="background:#0b1120; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="blueHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="purpleHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="emeraldHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <linearGradient id="amberHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+
+    <!-- Markers -->
+    <marker id="arrCyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrPurple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#a855f7"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24"/>
+    </marker>
+
+    <!-- Filter -->
+    <filter id="softShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="860" fill="url(#bgGrad2)"/>
+  <rect x="20" y="20" width="1160" height="820" rx="16" fill="none" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Main Title Header -->
+  <g transform="translate(45, 45)">
+    <rect x="0" y="0" width="40" height="40" rx="10" fill="#0284c7"/>
+    <path d="M12 20 L20 12 L28 20 M20 12 L20 28" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="54" y="22" font-size="22" font-weight="700" fill="#f8fafc" letter-spacing="0.5">SecureFileCrypt Architecture (Format Version 2)</text>
+    <text x="54" y="38" font-size="13" font-weight="400" fill="#94a3b8">Dual-Key Envelope Encryption, Memory-Hard Argon2id, and Chunked Authenticated Streaming AEAD</text>
+    
+    <!-- Pills -->
+    <rect x="830" y="6" width="145" height="26" rx="6" fill="#0284c7" fill-opacity="0.25" stroke="#38bdf8" stroke-width="1"/>
+    <text x="902" y="23" font-size="11" font-weight="600" fill="#38bdf8" text-anchor="middle">ENVELOPE ENCRYPTION</text>
+    <rect x="985" y="6" width="145" height="26" rx="6" fill="#059669" fill-opacity="0.25" stroke="#34d399" stroke-width="1"/>
+    <text x="1057" y="23" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">BOUNDED STREAMING</text>
+  </g>
+
+  <!-- ==================== LEFT COLUMN: KEY HIERARCHY & DATA ENCRYPTION ==================== -->
+  <g transform="translate(45, 110)">
+    <!-- Container Card -->
+    <rect x="0" y="0" width="560" height="460" rx="12" fill="#131c31" stroke="#334155" stroke-width="1" filter="url(#softShadow)"/>
+    <rect x="0" y="0" width="560" height="36" rx="12" fill="url(#blueHeader)"/>
+    <rect x="0" y="24" width="560" height="12" fill="#0284c7"/>
+    <text x="20" y="24" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="0.5">1. DUAL-KEY ENVELOPE HIERARCHY &amp; CHUNKED AEAD ENGINE</text>
+
+    <!-- Branch A: Key Encryption Key (KEK) via Argon2id -->
+    <g transform="translate(20, 50)">
+      <rect x="0" y="0" width="245" height="135" rx="8" fill="#1e293b" stroke="#0284c7" stroke-width="1.2"/>
+      <text x="14" y="22" font-size="11" font-weight="700" fill="#38bdf8">KEY DERIVATION (KEK)</text>
+      <text x="14" y="42" font-size="11" font-weight="600" fill="#f1f5f9">🔑 User Master Password</text>
+      <text x="14" y="58" font-size="9.5" fill="#94a3b8">+ 16-byte Random Salt (os.urandom)</text>
+
+      <!-- Argon2id Box -->
+      <rect x="14" y="68" width="215" height="52" rx="6" fill="#0f172a" stroke="#0284c7" stroke-dasharray="3,2"/>
+      <text x="22" y="86" font-size="11" font-weight="700" fill="#38bdf8">Argon2id (RFC 9106)</text>
+      <text x="22" y="100" font-size="9.5" fill="#94a3b8">t=2 passes, m=64 MB RAM, p=4 lanes</text>
+      <text x="22" y="113" font-size="9.5" font-weight="600" fill="#34d399">→ 256-bit Key Encryption Key (KEK)</text>
+    </g>
+
+    <!-- Branch B: Data Encryption Key (DEK) Generation -->
+    <g transform="translate(295, 50)">
+      <rect x="0" y="0" width="245" height="135" rx="8" fill="#1e293b" stroke="#7c3aed" stroke-width="1.2"/>
+      <text x="14" y="22" font-size="11" font-weight="700" fill="#c084fc">DATA ENCRYPTION KEY (DEK)</text>
+      <text x="14" y="42" font-size="11" font-weight="600" fill="#f1f5f9">🎲 Cryptographic CSPRNG</text>
+      <text x="14" y="58" font-size="9.5" fill="#94a3b8">os.urandom(32) [256-bit random key]</text>
+
+      <!-- DEK Wrapping Box -->
+      <rect x="14" y="68" width="215" height="52" rx="6" fill="#0f172a" stroke="#7c3aed" stroke-dasharray="3,2"/>
+      <text x="22" y="86" font-size="11" font-weight="700" fill="#c084fc">Envelope Wrapping (AES-GCM)</text>
+      <text x="22" y="100" font-size="9.5" fill="#94a3b8">Encrypted with KEK + 12B Nonce</text>
+      <text x="22" y="113" font-size="9.5" font-weight="600" fill="#38bdf8">AAD Binds Fixed Header Parameters</text>
+    </g>
+
+    <!-- KEK to DEK Wrap Arrow -->
+    <path d="M 265 118 L 290 118" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrCyan)"/>
+
+    <!-- Metadata Protection Box -->
+    <g transform="translate(20, 200)">
+      <rect x="0" y="0" width="520" height="70" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="16" y="22" font-size="11" font-weight="700" fill="#f8fafc">ENCRYPTED &amp; PADDED METADATA (KEK Protected)</text>
+      <text x="16" y="40" font-size="10" fill="#cbd5e1">• Protects: Original Filename (Unicode/path-sanitized), MIME Content Type, Exact Byte Length</text>
+      <text x="16" y="56" font-size="9.5" fill="#34d399">• Length-Hiding: PKCS#7 padded to 64-byte block boundary + AAD bound ("AGY2-V2-META-WRAP")</text>
+    </g>
+
+    <!-- Chunked Streaming AEAD Box -->
+    <g transform="translate(20, 285)">
+      <rect x="0" y="0" width="520" height="155" rx="8" fill="#1e293b" stroke="#059669" stroke-width="1.2"/>
+      <rect x="0" y="0" width="520" height="26" rx="8" fill="url(#emeraldHeader)"/>
+      <rect x="0" y="18" width="520" height="8" fill="#059669"/>
+      <text x="16" y="18" font-size="11" font-weight="700" fill="#ffffff">CHUNKED STREAMING AEAD ENGINE (DEK Protected)</text>
+
+      <text x="16" y="46" font-size="10.5" font-weight="600" fill="#f8fafc">Sequential 64 KiB Payload Framing (Memory-Bounded O(1) RAM):</text>
+      
+      <!-- Chunk Sub-blocks -->
+      <g transform="translate(16, 56)">
+        <rect x="0" y="0" width="155" height="52" rx="6" fill="#0f172a" stroke="#059669"/>
+        <text x="12" y="18" font-size="10" font-weight="700" fill="#34d399">Chunk 0 (64 KiB)</text>
+        <text x="12" y="32" font-size="8.5" fill="#94a3b8">IV: Prefix (8B) || 0000</text>
+        <text x="12" y="44" font-size="8.5" fill="#38bdf8">AAD: FileID || 0 || IsLast=0</text>
+
+        <rect x="165" y="0" width="155" height="52" rx="6" fill="#0f172a" stroke="#059669"/>
+        <text x="177" y="18" font-size="10" font-weight="700" fill="#34d399">Chunk 1 (64 KiB)</text>
+        <text x="177" y="32" font-size="8.5" fill="#94a3b8">IV: Prefix (8B) || 0001</text>
+        <text x="177" y="44" font-size="8.5" fill="#38bdf8">AAD: FileID || 1 || IsLast=0</text>
+
+        <rect x="330" y="0" width="155" height="52" rx="6" fill="#0f172a" stroke="#059669"/>
+        <text x="342" y="18" font-size="10" font-weight="700" fill="#34d399">Chunk N (Final)</text>
+        <text x="342" y="32" font-size="8.5" fill="#94a3b8">IV: Prefix (8B) || Counter</text>
+        <text x="342" y="44" font-size="8.5" fill="#f59e0b">AAD: FileID || N || IsLast=1</text>
+      </g>
+
+      <text x="16" y="128" font-size="9.5" fill="#cbd5e1">• Positional AAD prevents chunk reordering, truncation, duplicate insertion, or cross-file splicing.</text>
+      <text x="16" y="142" font-size="9.5" font-weight="600" fill="#34d399">• Python Heap Capped: ≤ 0.52 MiB across all tested files (up to 400 MiB) via 128 KiB stream buffer.</text>
+    </g>
+  </g>
+
+  <!-- ==================== RIGHT COLUMN: CONTAINER LAYOUT & DECRYPTION ==================== -->
+  <g transform="translate(630, 110)">
+    <!-- Container Structure Card -->
+    <rect x="0" y="0" width="525" height="460" rx="12" fill="#131c31" stroke="#334155" stroke-width="1" filter="url(#softShadow)"/>
+    <rect x="0" y="0" width="525" height="36" rx="12" fill="url(#purpleHeader)"/>
+    <rect x="0" y="24" width="525" height="12" fill="#7c3aed"/>
+    <text x="20" y="24" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="0.5">2. FORMAT V2 CONTAINER STRUCTURE ON DISK</text>
+
+    <!-- Header Specs -->
+    <g transform="translate(20, 50)">
+      <rect x="0" y="0" width="485" height="125" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <rect x="0" y="0" width="485" height="24" rx="8" fill="#0369a1"/>
+      <rect x="0" y="16" width="485" height="8" fill="#0369a1"/>
+      <text x="14" y="17" font-size="11" font-weight="700" fill="#ffffff">FIXED CONTAINER HEADER (111 Bytes — In-the-Clear on Disk)</text>
+
+      <g transform="translate(14, 32)">
+        <rect x="0" y="0" width="70" height="38" rx="4" fill="#0f172a" stroke="#334155"/>
+        <text x="35" y="16" font-size="9" font-weight="700" fill="#38bdf8" text-anchor="middle">Magic 'AGY2'</text>
+        <text x="35" y="29" font-size="8" fill="#94a3b8" text-anchor="middle">4B + Ver (1B)</text>
+
+        <rect x="76" y="0" width="85" height="38" rx="4" fill="#0f172a" stroke="#334155"/>
+        <text x="118" y="16" font-size="9" font-weight="700" fill="#38bdf8" text-anchor="middle">Argon2id Params</text>
+        <text x="118" y="29" font-size="8" fill="#94a3b8" text-anchor="middle">t=2, m=64MB, p=4</text>
+
+        <rect x="167" y="0" width="75" height="38" rx="4" fill="#0f172a" stroke="#334155"/>
+        <text x="204" y="16" font-size="9" font-weight="700" fill="#38bdf8" text-anchor="middle">Salt + Nonce</text>
+        <text x="204" y="29" font-size="8" fill="#94a3b8" text-anchor="middle">16B + 12B</text>
+
+        <rect x="248" y="0" width="105" height="38" rx="4" fill="#0f172a" stroke="#7c3aed"/>
+        <text x="300" y="16" font-size="9" font-weight="700" fill="#c084fc" text-anchor="middle">Wrapped DEK</text>
+        <text x="300" y="29" font-size="8" fill="#38bdf8" text-anchor="middle">32B Key + 16B Tag</text>
+
+        <rect x="359" y="0" width="98" height="38" rx="4" fill="#0f172a" stroke="#334155"/>
+        <text x="408" y="16" font-size="9" font-weight="700" fill="#38bdf8" text-anchor="middle">Stream &amp; Chunk</text>
+        <text x="408" y="29" font-size="8" fill="#94a3b8" text-anchor="middle">Nonce 8B | 64KB</text>
+      </g>
+
+      <text x="14" y="88" font-size="9.5" fill="#f8fafc">• Authenticated Parameters: Version, KDF, Salt, Nonce, File ID, Chunk Size bound via AAD.</text>
+      <text x="14" y="102" font-size="9.5" fill="#38bdf8">• Defensive Limits Enforced: m ≤ 512 MB, t ≤ 10 (Rejects parameter bombs before allocation).</text>
+      <text x="14" y="116" font-size="9.5" fill="#f87171">• Visible on Disk: Container size, chunk size, KDF settings remain observable in plaintext.</text>
+    </g>
+
+    <!-- Metadata Layout on Disk -->
+    <g transform="translate(20, 188)">
+      <rect x="0" y="0" width="485" height="50" rx="8" fill="#1e293b" stroke="#7c3aed" stroke-width="1"/>
+      <text x="14" y="20" font-size="10.5" font-weight="700" fill="#c084fc">VARIABLE ENCRYPTED METADATA BLOCK</text>
+      <text x="14" y="38" font-size="9.5" fill="#cbd5e1">12B Nonce || Encrypted Padded JSON (Filename, MIME, Length) || 16B GCM Tag</text>
+    </g>
+
+    <!-- Chunk Stream Layout on Disk -->
+    <g transform="translate(20, 250)">
+      <rect x="0" y="0" width="485" height="65" rx="8" fill="#1e293b" stroke="#059669" stroke-width="1"/>
+      <text x="14" y="20" font-size="10.5" font-weight="700" fill="#34d399">STREAMING AUTHENTICATED CHUNK RECORDS</text>
+      <text x="14" y="38" font-size="9.5" fill="#cbd5e1">Framing per Chunk: Length (4B Big-Endian) || IsLast (1B: 0/1) || Ciphertext || 16B Tag</text>
+      <text x="14" y="52" font-size="9.5" fill="#94a3b8">Enables stream parser to read exact chunk lengths without unbounded memory allocation.</text>
+    </g>
+
+    <!-- Decryption Verification Flow -->
+    <g transform="translate(20, 328)">
+      <rect x="0" y="0" width="485" height="115" rx="8" fill="#0f172a" stroke="#0d9488" stroke-width="1.2"/>
+      <rect x="0" y="0" width="485" height="24" rx="8" fill="#0f766e"/>
+      <rect x="0" y="16" width="485" height="8" fill="#0f766e"/>
+      <text x="14" y="17" font-size="11" font-weight="700" fill="#ffffff">DECRYPTION &amp; AUTHENTICATION VERIFICATION</text>
+
+      <text x="14" y="42" font-size="9.5" fill="#cbd5e1">1. Parse &amp; Defensively Validate Header (Magic, Version, Parameter Bounds).</text>
+      <text x="14" y="58" font-size="9.5" fill="#cbd5e1">2. Derive KEK via Argon2id → Unwrap DEK with AAD (Wrong password raises IncorrectPasswordError).</text>
+      <text x="14" y="74" font-size="9.5" fill="#cbd5e1">3. Decrypt Metadata → Extract &amp; Sanitize target filename against directory traversal.</text>
+      <text x="14" y="90" font-size="9.5" font-weight="600" fill="#34d399">4. Stream Chunks: Verify 16B Tag per chunk before releasing plaintext to disk output file.</text>
+      <text x="14" y="104" font-size="9.5" font-weight="700" fill="#f87171">★ Tampered chunk or premature EOF immediately unlinks temporary file (Zero Plaintext Leakage).</text>
+    </g>
+  </g>
+
+  <!-- ==================== BOTTOM ROW: GATEWAY BUFFERING & PASSWORD ROTATION ==================== -->
+  
+  <!-- Bottom Left: Web Gateway vs Core Streaming Engine -->
+  <g transform="translate(45, 590)">
+    <rect x="0" y="0" width="560" height="225" rx="12" fill="#131c31" stroke="#334155" stroke-width="1" filter="url(#softShadow)"/>
+    <rect x="0" y="0" width="560" height="34" rx="12" fill="url(#amberHeader)"/>
+    <rect x="0" y="24" width="560" height="10" fill="#d97706"/>
+    <text x="20" y="23" font-size="12.5" font-weight="700" fill="#ffffff" letter-spacing="0.5">3. ARCHITECTURAL SCOPE: STREAMING CORE VS. WEB GATEWAY</text>
+
+    <!-- Tier 1: Python CLI Streaming Engine -->
+    <g transform="translate(18, 48)">
+      <rect x="0" y="0" width="524" height="68" rx="8" fill="#1e293b" stroke="#059669" stroke-width="1.2"/>
+      <text x="14" y="20" font-size="11" font-weight="700" fill="#34d399">Core Python Streaming Engine (CLI &amp; Library API)</text>
+      <text x="14" y="38" font-size="10" fill="#f8fafc">Path-based encrypt_file() / decrypt_file() with 64 KiB Chunks &amp; 128 KiB Buffer</text>
+      <text x="14" y="54" font-size="9.5" font-weight="600" fill="#34d399">✓ Verified Bounded Memory: Capped at ≤ 0.52 MiB Python heap up to 400 MiB (1,579.2× reduction).</text>
+    </g>
+
+    <!-- Tier 2: FastAPI Web Gateway Buffering -->
+    <g transform="translate(18, 126)">
+      <rect x="0" y="0" width="524" height="85" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.2"/>
+      <text x="14" y="20" font-size="11" font-weight="700" fill="#fbbf24">Current FastAPI Upload Gateway (server.py Line 65)</text>
+      <text x="14" y="38" font-size="10" fill="#fca5a5">content = await file.read()  # In-Memory Request Body Buffering in Server RAM</text>
+      <text x="14" y="54" font-size="9.5" fill="#cbd5e1">• Current Web Deployment buffers uploaded file into io.BytesIO before calling stream cipher.</text>
+      <text x="14" y="70" font-size="9.5" font-weight="600" fill="#fbbf24">★ Proposed Future Work: Refactor to StreamingResponse &amp; async iterators for end-to-end web streaming.</text>
+    </g>
+  </g>
+
+  <!-- Bottom Right: Password Rotation Lifecycle -->
+  <g transform="translate(630, 590)">
+    <rect x="0" y="0" width="525" height="225" rx="12" fill="#131c31" stroke="#334155" stroke-width="1" filter="url(#softShadow)"/>
+    <rect x="0" y="0" width="525" height="34" rx="12" fill="url(#emeraldHeader)"/>
+    <rect x="0" y="24" width="525" height="10" fill="#059669"/>
+    <text x="20" y="23" font-size="12.5" font-weight="700" fill="#ffffff" letter-spacing="0.5">4. PASSWORD ROTATION: DUAL-KEY ENVELOPE RE-WRAPPING</text>
+
+    <!-- Paradigm A: In-Place Header Rewrite -->
+    <g transform="translate(18, 48)">
+      <rect x="0" y="0" width="489" height="74" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <text x="14" y="20" font-size="11" font-weight="700" fill="#38bdf8">Paradigm A: In-Place Header Overwrite (atomic=False)</text>
+      <text x="14" y="36" font-size="9.5" fill="#f8fafc">• Decrypt DEK with old KEK → Re-wrap DEK with new KEK → f.seek(0) &amp; overwrite 111B header.</text>
+      <text x="14" y="52" font-size="9.5" font-weight="600" fill="#34d399">✓ Constant O(1) Disk I/O: 0.165 s on 400 MiB (4.75× faster than full re-encryption).</text>
+      <text x="14" y="66" font-size="9" fill="#f87171">⚠ Safety Trade-off: Not crash-safe; mid-write power interruption can corrupt container header.</text>
+    </g>
+
+    <!-- Paradigm B: Atomic Replacement -->
+    <g transform="translate(18, 130)">
+      <rect x="0" y="0" width="489" height="78" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.2"/>
+      <text x="14" y="20" font-size="11" font-weight="700" fill="#c084fc">Paradigm B: Atomic Replacement (atomic=True)</text>
+      <text x="14" y="36" font-size="9.5" fill="#f8fafc">• Writes new header to .tmp file, stream-copies ciphertext chunks, calls os.fsync, and replaces file.</text>
+      <text x="14" y="52" font-size="9.5" font-weight="600" fill="#34d399">✓ Total Crash Consistency: Zero risk of corruption via NTFS/POSIX atomic rename semantics.</text>
+      <text x="14" y="66" font-size="9" fill="#94a3b8">• Trade-off: Requires O(N) stream data transfer (0.849 s on 400 MiB), but zero payload re-encryption.</text>
+    </g>
+  </g>
+</svg>

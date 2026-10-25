@@ -1,0 +1,176 @@
+{
+  "F1": {
+    "type": "Text (.txt)",
+    "size_mb": 0.09999942779541016,
+    "bytes": 104857,
+    "64KB": {
+      "enc_mean_s": 0.04512286666431464,
+      "enc_median_s": 0.042491700005484745,
+      "enc_stdev_s": 0.0059969285232631935,
+      "enc_throughput_mb_s": 2.2161585729768043,
+      "dec_mean_s": 0.07057670000358485,
+      "dec_median_s": 0.07130470001720823,
+      "dec_stdev_s": 0.00135908204874544,
+      "dec_throughput_mb_s": 1.4168901038208193,
+      "peak_python_heap_mb": 0.41688378651936847,
+      "process_rss_mb": 22.29296875
+    },
+    "128KB": {
+      "enc_mean_s": 0.04334519999489809,
+      "enc_median_s": 0.04303790000267327,
+      "enc_stdev_s": 0.00610914937831887,
+      "enc_throughput_mb_s": 2.3070473272053307,
+      "dec_mean_s": 0.06410230001589905,
+      "dec_median_s": 0.05956370002240874,
+      "dec_stdev_s": 0.007921003492166427,
+      "dec_throughput_mb_s": 1.5599975004111815,
+      "peak_python_heap_mb": 0.47910594940185547,
+      "process_rss_mb": 22.352864583333332
+    }
+  },
+  "F2": {
+    "type": "PDF document",
+    "size_mb": 1.25,
+    "bytes": 1310720,
+    "64KB": {
+      "enc_mean_s": 0.047555866660938285,
+      "enc_median_s": 0.04838369999197312,
+      "enc_stdev_s": 0.002862385953003171,
+      "enc_throughput_mb_s": 26.284874775013453,
+      "dec_mean_s": 0.059670533334913976,
+      "dec_median_s": 0.06053079999401234,
+      "dec_stdev_s": 0.005380627615885192,
+      "dec_throughput_mb_s": 20.94836312228182,
+      "peak_python_heap_mb": 0.5044755935668945,
+      "process_rss_mb": 22.368489583333332
+    },
+    "128KB": {
+      "enc_mean_s": 0.0472502333286684,
+      "enc_median_s": 0.04428709999774583,
+      "enc_stdev_s": 0.006661227954522573,
+      "enc_throughput_mb_s": 26.454895816177494,
+      "dec_mean_s": 0.07289376665721647,
+      "dec_median_s": 0.06835620000492781,
+      "dec_stdev_s": 0.014292963998920384,
+      "dec_throughput_mb_s": 17.148242673178558,
+      "peak_python_heap_mb": 0.7544898986816406,
+      "process_rss_mb": 22.268229166666668
+    }
+  },
+  "F3": {
+    "type": "Image (.jpg)",
+    "size_mb": 5.399999618530273,
+    "bytes": 5662310,
+    "64KB": {
+      "enc_mean_s": 0.07673033333655137,
+      "enc_median_s": 0.07270379998954013,
+      "enc_stdev_s": 0.007460409519717279,
+      "enc_throughput_mb_s": 70.37633467386388,
+      "dec_mean_s": 0.09017219999805093,
+      "dec_median_s": 0.09680769999977201,
+      "dec_stdev_s": 0.013437482307036773,
+      "dec_throughput_mb_s": 59.88541500204048,
+      "peak_python_heap_mb": 0.5044609705607096,
+      "process_rss_mb": 22.43359375
+    },
+    "128KB": {
+      "enc_mean_s": 0.05591286665488345,
+      "enc_median_s": 0.05693230000906624,
+      "enc_stdev_s": 0.00603932828322245,
+      "enc_throughput_mb_s": 96.57883670785883,
+      "dec_mean_s": 0.08078720000533697,
+      "dec_median_s": 0.08121629999368452,
+      "dec_stdev_s": 0.00449802690871646,
+      "dec_throughput_mb_s": 66.8422673167722,
+      "peak_python_heap_mb": 0.7544647852579752,
+      "process_rss_mb": 22.444010416666668
+    }
+  },
+  "F4": {
+    "type": "Short video (.mp4)",
+    "size_mb": 18.699999809265137,
+    "bytes": 19608371,
+    "64KB": {
+      "enc_mean_s": 0.09432083333376795,
+      "enc_median_s": 0.09436629997799173,
+      "enc_stdev_s": 0.009971777737842883,
+      "enc_throughput_mb_s": 198.25948465799146,
+      "dec_mean_s": 0.11014256666142803,
+      "dec_median_s": 0.1098675999965053,
+      "dec_stdev_s": 0.010268111582451712,
+      "dec_throughput_mb_s": 169.77995316513613,
+      "peak_python_heap_mb": 0.504487673441569,
+      "process_rss_mb": 22.506510416666668
+    },
+    "128KB": {
+      "enc_mean_s": 0.09806623334103885,
+      "enc_median_s": 0.09594379999907687,
+      "enc_stdev_s": 0.004490565716986594,
+      "enc_throughput_mb_s": 190.68744839248907,
+      "dec_mean_s": 0.11626743335121621,
+      "dec_median_s": 0.11207910001394339,
+      "dec_stdev_s": 0.0158487498467326,
+      "dec_throughput_mb_s": 160.83609373896553,
+      "peak_python_heap_mb": 0.7544651031494141,
+      "process_rss_mb": 22.471354166666668
+    }
+  },
+  "F5": {
+    "type": "Medium Archive (.bin)",
+    "size_mb": 50.0,
+    "bytes": 52428800,
+    "64KB": {
+      "enc_mean_s": 0.20098499999342798,
+      "enc_median_s": 0.19047599998884834,
+      "enc_stdev_s": 0.034848505846872206,
+      "enc_throughput_mb_s": 248.77478419600942,
+      "dec_mean_s": 0.23589260000153445,
+      "dec_median_s": 0.21226840000599623,
+      "dec_stdev_s": 0.0658003885607684,
+      "dec_throughput_mb_s": 211.96086693552385,
+      "peak_python_heap_mb": 0.5044829050699869,
+      "process_rss_mb": 22.622395833333332
+    },
+    "128KB": {
+      "enc_mean_s": 0.14471486667753197,
+      "enc_median_s": 0.14853560001938604,
+      "enc_stdev_s": 0.01138943656461752,
+      "enc_throughput_mb_s": 345.5070038617039,
+      "dec_mean_s": 0.16467423333475986,
+      "dec_median_s": 0.16508919998886995,
+      "dec_stdev_s": 0.022230354954024444,
+      "dec_throughput_mb_s": 303.629772475436,
+      "peak_python_heap_mb": 0.7544864018758138,
+      "process_rss_mb": 22.5546875
+    }
+  },
+  "F6": {
+    "type": "Large Archive (.bin)",
+    "size_mb": 100.0,
+    "bytes": 104857600,
+    "64KB": {
+      "enc_mean_s": 0.4133579000093353,
+      "enc_median_s": 0.4514107000140939,
+      "enc_stdev_s": 0.08179178775475386,
+      "enc_throughput_mb_s": 241.92110516755963,
+      "dec_mean_s": 0.3839862000022549,
+      "dec_median_s": 0.3875324999971781,
+      "dec_stdev_s": 0.020139597557162388,
+      "dec_throughput_mb_s": 260.4260257254369,
+      "peak_python_heap_mb": 0.5044870376586914,
+      "process_rss_mb": 22.647135416666668
+    },
+    "128KB": {
+      "enc_mean_s": 0.330879833335833,
+      "enc_median_s": 0.2548386999987997,
+      "enc_stdev_s": 0.14188640065990427,
+      "enc_throughput_mb_s": 302.2245236037188,
+      "dec_mean_s": 0.27819543332831626,
+      "dec_median_s": 0.2766860999981873,
+      "dec_stdev_s": 0.008178529988524546,
+      "dec_throughput_mb_s": 359.45953103401087,
+      "peak_python_heap_mb": 0.7544914881388346,
+      "process_rss_mb": 22.53515625
+    }
+  }
+}

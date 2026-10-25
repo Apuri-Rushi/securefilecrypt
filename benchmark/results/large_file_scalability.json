@@ -1,0 +1,237 @@
+{
+  "metadata": {
+    "os": "Windows",
+    "os_release": "10",
+    "machine": "AMD64",
+    "python_version": "3.10.11",
+    "trials_per_file": 3,
+    "chunk_size_bytes": 65536,
+    "io_buffer_size_bytes": 131072,
+    "benchmark_timestamp": "2026-10-24T12:24:06Z"
+  },
+  "kdf_comparison": {
+    "pbkdf2": {
+      "mean_s": 0.013198300002841279,
+      "median_s": 0.011777600011555478,
+      "stdev_s": 0.003140282743425369,
+      "raw_trials": [
+        0.011777600011555478,
+        0.011538099992321804,
+        0.018760600010864437,
+        0.01138619999983348,
+        0.012528999999631196
+      ],
+      "iterations": 100000,
+      "memory_hardness": "0 MB (O(1) RAM)"
+    },
+    "argon2id": {
+      "mean_s": 0.03469776000129059,
+      "median_s": 0.03394170000683516,
+      "stdev_s": 0.003363155027239483,
+      "raw_trials": [
+        0.03394170000683516,
+        0.04013680000207387,
+        0.03539089998230338,
+        0.03228959999978542,
+        0.03172980001545511
+      ],
+      "time_cost": 2,
+      "memory_cost_mb": 64,
+      "parallelism": 4,
+      "memory_hardness": "64 MB RAM"
+    }
+  },
+  "files": {
+    "F7": {
+      "label": "Large Archive 200MB",
+      "size_bytes": 209715200,
+      "size_mib": 200.0,
+      "sha256": "24dfb9eb6556110685ff11222e812ab15abcac8cfd985fee2d3438774ea06bcf",
+      "baseline": {
+        "enc_mean_s": 0.199902400005764,
+        "enc_median_s": 0.1902671999996528,
+        "enc_stdev_s": 0.01822041645792739,
+        "enc_throughput_mib_s": 1000.4882382314228,
+        "enc_median_throughput_mib_s": 1051.1533254305784,
+        "enc_raw_times": [
+          0.1902671999996528,
+          0.22091740000178106,
+          0.1885226000158582
+        ],
+        "dec_mean_s": 0.22452596665243618,
+        "dec_median_s": 0.22282249998534098,
+        "dec_stdev_s": 0.02550929370119845,
+        "dec_throughput_mib_s": 890.7655670383901,
+        "dec_median_throughput_mib_s": 897.5754244439299,
+        "dec_raw_times": [
+          0.22282249998534098,
+          0.2508442999969702,
+          0.19991109997499734
+        ],
+        "peak_python_heap_mib": 400.00156593322754,
+        "peak_process_rss_mib": 423.8984375,
+        "integrity_verified": true
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.593618133328467,
+        "enc_median_s": 0.5691295999858994,
+        "enc_stdev_s": 0.08882072929711061,
+        "enc_throughput_mib_s": 336.91693156100723,
+        "enc_median_throughput_mib_s": 351.4138080411828,
+        "enc_raw_times": [
+          0.5691295999858994,
+          0.5196106999937911,
+          0.6921141000057105
+        ],
+        "dec_mean_s": 0.6582759666683463,
+        "dec_median_s": 0.5704062999866437,
+        "dec_stdev_s": 0.2136077110821224,
+        "dec_throughput_mib_s": 303.8239433413256,
+        "dec_median_throughput_mib_s": 350.62726341676637,
+        "dec_raw_times": [
+          0.5704062999866437,
+          0.502617599995574,
+          0.9018040000228211
+        ],
+        "peak_python_heap_mib": 0.516632080078125,
+        "peak_process_rss_mib": 24.0625,
+        "integrity_verified": true
+      }
+    },
+    "F8": {
+      "label": "Large Archive 300MB",
+      "size_bytes": 314572800,
+      "size_mib": 300.0,
+      "sha256": "a8dcda07e8a029c88422dc7583ef36006038533aa570ec20a94b317651843edf",
+      "baseline": {
+        "enc_mean_s": 0.2554168999971201,
+        "enc_median_s": 0.25968369998736307,
+        "enc_stdev_s": 0.007883356155715993,
+        "enc_throughput_mib_s": 1174.550313637753,
+        "enc_median_throughput_mib_s": 1155.2515618600582,
+        "enc_raw_times": [
+          0.25968369998736307,
+          0.24631980000413023,
+          0.260247199999867
+        ],
+        "dec_mean_s": 0.2907506333334216,
+        "dec_median_s": 0.2917840000009164,
+        "dec_stdev_s": 0.01219642707990116,
+        "dec_throughput_mib_s": 1031.8120258605647,
+        "dec_median_throughput_mib_s": 1028.1578153670448,
+        "dec_raw_times": [
+          0.2917840000009164,
+          0.3023974999960046,
+          0.2780704000033438
+        ],
+        "peak_python_heap_mib": 600.000467300415,
+        "peak_process_rss_mib": 624.234375,
+        "integrity_verified": true
+      },
+      "improved_streaming": {
+        "enc_mean_s": 0.7338131000093805,
+        "enc_median_s": 0.6731961000186857,
+        "enc_stdev_s": 0.14523414366678558,
+        "enc_throughput_mib_s": 408.823445637813,
+        "enc_median_throughput_mib_s": 445.635380228247,
+        "enc_raw_times": [
+          0.6731961000186857,
+          0.8995362999849021,
+          0.6287069000245538
+        ],
+        "dec_mean_s": 0.67381666667643,
+        "dec_median_s": 0.5848810000170488,
+        "dec_stdev_s": 0.16566413465660515,
+        "dec_throughput_mib_s": 445.22496227310063,
+        "dec_median_throughput_mib_s": 512.924851365073,
+        "dec_raw_times": [
+          0.5848810000170488,
+          0.5716133000096306,
+          0.8649557000026107
+        ],
+        "peak_python_heap_mib": 0.5066146850585938,
+        "peak_process_rss_mib": 24.1015625,
+        "integrity_verified": true
+      }
+    },
+    "F9": {
+      "label": "Large Archive 400MB",
+      "size_bytes": 419430400,
+      "size_mib": 400.0,
+      "sha256": "45e43128cef78aeeb989326f78fee33c8b5222efb744fc15db9b5529b6907e92",
+      "baseline": {
+        "enc_mean_s": 0.4206801999922997,
+        "enc_median_s": 0.4194915999833029,
+        "enc_stdev_s": 0.06158960253560694,
+        "enc_throughput_mib_s": 950.8410426906751,
+        "enc_median_throughput_mib_s": 953.5351840559413,
+        "enc_raw_times": [
+          0.4194915999833029,
+          0.48285550001310185,
+          0.3596934999804944
+        ],
+        "dec_mean_s": 0.43893356665891287,
+        "dec_median_s": 0.44720379999489523,
+        "dec_stdev_s": 0.0641850088326396,
+        "dec_throughput_mib_s": 911.2996370834236,
+        "dec_median_throughput_mib_s": 894.4467824391608,
+        "dec_raw_times": [
+          0.49858259997563437,
+          0.44720379999489523,
+          0.37101430000620894
+        ],
+        "peak_python_heap_mib": 800.000467300415,
+        "peak_process_rss_mib": 824.01953125,
+        "integrity_verified": true
+      },
+      "improved_streaming": {
+        "enc_mean_s": 1.0758835666638333,
+        "enc_median_s": 1.0135230000014417,
+        "enc_stdev_s": 0.16904581970905055,
+        "enc_throughput_mib_s": 371.78744279954464,
+        "enc_median_throughput_mib_s": 394.66297262068156,
+        "enc_raw_times": [
+          0.9468768999795429,
+          1.0135230000014417,
+          1.2672508000105154
+        ],
+        "dec_mean_s": 1.09180940000806,
+        "dec_median_s": 0.9189814999990631,
+        "dec_stdev_s": 0.325320992986148,
+        "dec_throughput_mib_s": 366.36431230308796,
+        "dec_median_throughput_mib_s": 435.26447485657525,
+        "dec_raw_times": [
+          0.8893780000216793,
+          0.9189814999990631,
+          1.4670687000034377
+        ],
+        "peak_python_heap_mib": 0.5065832138061523,
+        "peak_process_rss_mib": 23.31640625,
+        "integrity_verified": true
+      }
+    }
+  },
+  "password_rotation": {
+    "F7": {
+      "size_mib": 200.0,
+      "baseline_reencrypt_s": 0.3970231999992393,
+      "improved_inplace_header_s": 0.11613219999708235,
+      "improved_atomic_file_s": 0.5099245999881532,
+      "inplace_speedup_vs_baseline": 3.418717633948327
+    },
+    "F8": {
+      "size_mib": 300.0,
+      "baseline_reencrypt_s": 0.47468579999986105,
+      "improved_inplace_header_s": 0.12296320000314154,
+      "improved_atomic_file_s": 0.7041069999977481,
+      "inplace_speedup_vs_baseline": 3.8603891244513275
+    },
+    "F9": {
+      "size_mib": 400.0,
+      "baseline_reencrypt_s": 0.7827977999986615,
+      "improved_inplace_header_s": 0.16469979999237694,
+      "improved_atomic_file_s": 0.8492482999863569,
+      "inplace_speedup_vs_baseline": 4.752876445720596
+    }
+  }
+}

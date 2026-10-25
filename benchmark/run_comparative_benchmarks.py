@@ -94,39 +94,65 @@ def benchmark_kdf(password: str, num_trials: int = 5) -> dict:
     }
 
 
-def benchmark_password_change(data: bytes, old_pwd: str, new_pwd: str) -> dict:
+def benchmark_password_change(data: bytes, old_pwd: str, new_pwd: str, file_path: Path = None) -> dict:
     """
-    Compares password change workflow latency:
-    - Baseline: Must decrypt entire ciphertext + re-derive key + re-encrypt entire payload.
-    - Improved: Envelope unwrap DEK + derive new KEK + re-wrap DEK (payload untouched).
+    Compares password change workflow latencies across clearly separated operational paradigms:
+    1. Baseline Full In-Memory Re-encryption: decrypt whole payload + derive new PBKDF2 + re-encrypt payload.
+    2. Improved Stream-Copy Re-wrap (change_password_stream): unwrap DEK + derive Argon2id + re-wrap DEK + stream copy payload chunks.
+    3. Improved In-Place Header Rewrite (change_password_file atomic=False): True O(1) header seek & overwrite on disk.
+    4. Improved Atomic File Replacement (change_password_file atomic=True): True atomic file write with temporary file and fsync.
     """
-    # 1. Baseline workflow
+    # 1. Baseline workflow (in-memory)
     base_enc = base_crypto.encrypt_bytes(data, old_pwd)
     t0 = time.perf_counter()
     decrypted = base_crypto.decrypt_bytes(base_enc, old_pwd)
     base_new_enc = base_crypto.encrypt_bytes(decrypted, new_pwd)
     base_change_time = time.perf_counter() - t0
+    assert base_crypto.decrypt_bytes(base_new_enc, new_pwd) == data
 
-    # 2. Improved envelope workflow
+    # 2. Improved stream-copy workflow (in-memory stream)
     impr_enc = impr_crypto.encrypt_bytes(data, old_pwd, filename="test.dat")
     in_buf = io.BytesIO(impr_enc)
     out_buf = io.BytesIO()
     t0 = time.perf_counter()
     impr_crypto.change_password_stream(in_buf, out_buf, old_pwd, new_pwd)
-    impr_change_time = time.perf_counter() - t0
-
-    # Verify both work with new password
-    assert base_crypto.decrypt_bytes(base_new_enc, new_pwd) == data
+    impr_stream_time = time.perf_counter() - t0
     restored, _ = impr_crypto.decrypt_bytes(out_buf.getvalue(), new_pwd)
     assert restored == data
 
-    speedup = base_change_time / impr_change_time if impr_change_time > 0 else 0
-
-    return {
+    res = {
         "baseline_reencrypt_s": base_change_time,
-        "improved_envelope_s": impr_change_time,
-        "speedup_factor": speedup,
+        "improved_envelope_s": impr_stream_time,
+        "improved_stream_copy_s": impr_stream_time,
+        "speedup_factor": base_change_time / impr_stream_time if impr_stream_time > 0 else 0,
     }
+
+    # 3 & 4. Disk-based file workflows (if file_path provided)
+    if file_path is not None and Path(file_path).exists():
+        with tempfile.TemporaryDirectory() as tmp_pwd_dir:
+            tmp_p = Path(tmp_pwd_dir)
+            test_enc_inplace = tmp_p / "test_inplace.enc"
+            test_enc_atomic = tmp_p / "test_atomic.enc"
+
+            # Create test encrypted files
+            impr_crypto.encrypt_file(file_path, test_enc_inplace, old_pwd)
+            impr_crypto.encrypt_file(file_path, test_enc_atomic, old_pwd)
+
+            # In-place header rewrite (True O(1) disk I/O)
+            t0 = time.perf_counter()
+            impr_crypto.change_password_file(test_enc_inplace, old_pwd, new_pwd, atomic=False)
+            inplace_time = time.perf_counter() - t0
+
+            # Atomic file replace (Tempfile + fsync + os.replace)
+            t0 = time.perf_counter()
+            impr_crypto.change_password_file(test_enc_atomic, old_pwd, new_pwd, atomic=True)
+            atomic_time = time.perf_counter() - t0
+
+            res["improved_inplace_header_s"] = inplace_time
+            res["improved_atomic_file_s"] = atomic_time
+            res["inplace_speedup_vs_baseline"] = base_change_time / inplace_time if inplace_time > 0 else 0
+
+    return res
 
 
 def benchmark_chunk_size_sensitivity(file_path: Path, password: str, num_trials: int = 3) -> dict:
@@ -390,15 +416,18 @@ def run_comparative_benchmarks(num_trials: int = 3, test_extended: bool = True) 
 
             # Password change benchmark on representative files
             if fid in ["F2", "F4", "F5", "F6"]:
-                pwd_res = benchmark_password_change(plaintext, test_pwd, new_pwd)
+                pwd_res = benchmark_password_change(plaintext, test_pwd, new_pwd, file_path=file_path)
                 comparison_results["password_change_comparison"][fid] = {
                     "file_type": meta["type"],
                     "size_mb": file_mb,
                     **pwd_res,
                 }
                 print(f"    Password Update Latency for {fid} ({file_mb:.1f} MB):")
-                print(f"      Baseline (Full Re-encryption): {pwd_res['baseline_reencrypt_s']:.4f} s")
-                print(f"      Improved (Envelope Re-wrap):   {pwd_res['improved_envelope_s']:.4f} s ({pwd_res['speedup_factor']:.1f}x speedup)")
+                print(f"      Baseline (Full Re-encryption):   {pwd_res['baseline_reencrypt_s']:.4f} s")
+                print(f"      Improved (Stream Copy Re-wrap):  {pwd_res['improved_stream_copy_s']:.4f} s")
+                if "improved_inplace_header_s" in pwd_res:
+                    print(f"      Improved (In-Place Header O(1)): {pwd_res['improved_inplace_header_s']:.4f} s ({pwd_res['inplace_speedup_vs_baseline']:.1f}x speedup)")
+                    print(f"      Improved (Atomic File Replace):  {pwd_res['improved_atomic_file_s']:.4f} s")
 
         # Run chunk size sensitivity profile on F4 (18.7 MB)
         print("\n[+] Profiling Chunk Size Sensitivity on F4 (18.7 MB)...")
@@ -445,19 +474,22 @@ def print_comparison_markdown_table(results: dict):
         )
     print("=" * 115)
 
-    print("\n" + "=" * 80)
-    print("PASSWORD ROTATION SPEEDUP (ENVELOPE DEK RE-WRAP VS FULL RE-ENCRYPTION)")
-    print("=" * 80)
-    print(f"{'File ID':<10}{'Size':<12}{'Baseline Re-encrypt':<24}{'Envelope Re-wrap':<22}{'Speedup':<12}")
-    print("-" * 80)
+    print("\n" + "=" * 105)
+    print("PASSWORD ROTATION WORKFLOWS (SEPARATED BY ARCHITECTURAL PARADIGM)")
+    print("=" * 105)
+    print(f"{'File ID':<8}{'Size':<10}{'Base Re-encrypt':<18}{'Stream Re-wrap':<18}{'In-Place O(1)':<18}{'In-Place Speedup':<18}{'Atomic File':<15}")
+    print("-" * 105)
     for fid, p in results["password_change_comparison"].items():
+        base_s = f"{p['baseline_reencrypt_s']:.4f} s"
+        stream_s = f"{p.get('improved_stream_copy_s', p.get('improved_envelope_s', 0)):.4f} s"
+        inplace_s = f"{p.get('improved_inplace_header_s', 0):.4f} s" if "improved_inplace_header_s" in p else "N/A"
+        speedup_s = f"{p.get('inplace_speedup_vs_baseline', 0):.1f}x" if "inplace_speedup_vs_baseline" in p else "N/A"
+        atomic_s = f"{p.get('improved_atomic_file_s', 0):.4f} s" if "improved_atomic_file_s" in p else "N/A"
         print(
-            f"{fid:<10}{p['size_mb']:.1f} MB     "
-            f"{p['baseline_reencrypt_s']:.4f} s                 "
-            f"{p['improved_envelope_s']:.4f} s               "
-            f"{p['speedup_factor']:.1f}x"
+            f"{fid:<8}{p['size_mb']:.1f} MB   "
+            f"{base_s:<18}{stream_s:<18}{inplace_s:<18}{speedup_s:<18}{atomic_s:<15}"
         )
-    print("=" * 80)
+    print("=" * 105)
 
     print("\n" + "=" * 80)
     print("CHUNK SIZE SENSITIVITY PROFILE (F4 18.7 MB)")

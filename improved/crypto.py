@@ -59,6 +59,9 @@ from improved.file_format import (
     MAGIC_BYTES,
 )
 
+# Empirically verified buffer size for optimal disk I/O alignment on host filesystems
+IO_BUFFER_SIZE = 128 * 1024
+
 
 class ImprovedCryptoError(Exception):
     """Base exception for improved cryptographic errors."""
@@ -263,9 +266,10 @@ def encrypt_stream(
         chunk_aad = compute_chunk_aad(file_id, chunk_index, is_last)
         ciphertext = encrypt_chunk(chunk_iv, current_chunk, associated_data=chunk_aad)
 
-        # Single write for frame header (length 4B + is_last 1B) + ciphertext
+        # Sequential write of frame header (length 4B + is_last 1B) and ciphertext avoids intermediate string concatenation
         frame_header = pack_header(">IB", len(ciphertext), 1 if is_last else 0)
-        write_chunk(frame_header + ciphertext)
+        write_chunk(frame_header)
+        write_chunk(ciphertext)
 
         if is_last:
             break
@@ -589,7 +593,9 @@ def change_password_file(
         try:
             flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
             fd = os.open(tmp_path, flags, 0o600)
-            with open(file_path, "rb") as fin, open(fd, "wb", closefd=True) as fout:
+            with open(file_path, "rb", buffering=IO_BUFFER_SIZE) as fin, open(
+                fd, "wb", buffering=IO_BUFFER_SIZE, closefd=True
+            ) as fout:
                 res = change_password_stream(fin, fout, old_password, new_password)
                 fout.flush()
                 os.fsync(fout.fileno())
@@ -734,7 +740,9 @@ def encrypt_file(
     try:
         flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
         fd = os.open(tmp_dest, flags, 0o600)
-        with open(src_path, "rb") as fin, open(fd, "wb", closefd=True) as fout:
+        with open(src_path, "rb", buffering=IO_BUFFER_SIZE) as fin, open(
+            fd, "wb", buffering=IO_BUFFER_SIZE, closefd=True
+        ) as fout:
             res = encrypt_stream(
                 fin, fout, password, filename=src_path.name, chunk_size=chunk_size, version=version
             )
@@ -765,7 +773,9 @@ def decrypt_file(
     try:
         flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
         fd = os.open(tmp_dest, flags, 0o600)
-        with open(src_path, "rb") as fin, open(fd, "wb", closefd=True) as fout:
+        with open(src_path, "rb", buffering=IO_BUFFER_SIZE) as fin, open(
+            fd, "wb", buffering=IO_BUFFER_SIZE, closefd=True
+        ) as fout:
             res = decrypt_stream(fin, fout, password)
             fout.flush()
             os.fsync(fout.fileno())
